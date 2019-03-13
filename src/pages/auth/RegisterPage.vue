@@ -56,26 +56,26 @@
               GitLab
             </a>
           </li>
-          <li class="google">
+          <li class="bitbucket">
             <a href="">
               <span>
                 <svg
                   aria-hidden="true"
                   focusable="false"
                   data-prefix="fab"
-                  data-icon="google"
-                  class="svg-inline--fa fa-google fa-w-16"
+                  data-icon="bitbucket"
+                  class="svg-inline--fa fa-bitbucket fa-w-16"
                   role="img"
                   xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 488 512"
+                  viewBox="0 0 499 512"
                 >
                   <path
                     fill="currentColor"
-                    d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z"
+                    d="M16.2 31.6C7.4 31.5.1 38.5 0 47.4c0 .9.1 1.9.2 2.8l67.9 412.1c1.7 10.4 10.7 18.1 21.3 18.2h325.7c7.9.1 14.7-5.6 16-13.4L499 50.3c1.4-8.7-4.5-16.9-13.2-18.3-.9-.1-1.8-.2-2.8-.2l-466.8-.2zm285.9 297.8h-104l-28.1-147h157.3l-25.2 147z"
                   ></path>
                 </svg>
               </span>
-              Google
+              Bitbucket
             </a>
           </li>
         </ul>
@@ -111,10 +111,8 @@
 </template>
 
 <script>
-import { AUTH_REQUEST } from "../../store/actions/auth";
-import { AUTH_LOGOUT } from "../../store/actions/auth";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+import Header from "@/components/partials/Header";
+import Footer from "@/components/partials/Footer";
 
 export default {
   name: "RegisterPage",
@@ -197,8 +195,8 @@ export default {
         &.gitlab {
           background: #e24329;
         }
-        &.google {
-          background: #4484f7;
+        &.bitbucket {
+          background: #0747a6;
         }
 
         &:not(:last-child) {
@@ -222,10 +220,13 @@ export default {
   }
   .register-form {
     background: #ffffff;
-    width: 470px;
     margin: 0 auto;
-    padding: 30px 40px;
     border-radius: 3px;
+
+    @media (min-width: 480px) {
+      width: 470px;
+      padding: 30px 40px;
+    }
 
     .title {
       text-align: center;

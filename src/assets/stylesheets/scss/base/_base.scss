@@ -1,0 +1,46 @@
+html {
+
+    &,
+    body {
+        height: 100%;
+        overflow-x: hidden;
+        margin: 0;
+        padding: 0;
+        font-family: "Circular", Helvetica, Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        background: #ffffff;
+
+        #app {
+            height: 100%;
+            overflow-x: hidden;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        .custom-container {
+            width: 100%;
+            margin-right: auto;
+            margin-left: auto;
+
+            @media (min-width: 576px) {
+                max-width: 540px;
+            }
+
+            @media (min-width: 768px) {
+                max-width: 720px;
+            }
+
+            @media (min-width: 992px) {
+                max-width: 960px;
+            }
+
+            @media (min-width: 1200px) {
+                max-width: 1140px;
+            }
+
+        }
+    }
+}

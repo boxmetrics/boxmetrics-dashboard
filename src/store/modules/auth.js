@@ -17,19 +17,21 @@ const actions = {
 	login: ({ commit, dispatch }, user) => {
 		return new Promise((resolve, reject) => {
 			commit('authLoading');
-			axios({ url: apiUrl + 'auth/login', data: user, method: 'POST' })
-				.then((res) => {
-					const token = res.data.token;
-					localStorage.setItem('user-token', token);
-					axios.defaults.headers.common['Authorization'] = token;
-					commit('authSuccess', res);
-					resolve(res);
-				})
-				.catch((err) => {
-					commit('authError', err);
-					localStorage.removeItem('user-token');
-					reject(err);
-				});
+			setTimeout(() => {
+				axios({ url: apiUrl + 'auth/login', data: user, method: 'POST' })
+					.then((res) => {
+						const token = res.data.token;
+						localStorage.setItem('user-token', token);
+						axios.defaults.headers.common['Authorization'] = token;
+						commit('authSuccess', res);
+						resolve(res);
+					})
+					.catch((err) => {
+						commit('authError', err);
+						localStorage.removeItem('user-token');
+						reject(err);
+					});
+			}, 10000);
 		});
 	},
 	register: ({ commit, dispatch }, user) => {},
