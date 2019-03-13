@@ -1,0 +1,21 @@
+  node {
+    stage('Checkout') {
+       checkout scm
+    }
+    stage('Environment') {
+      sh 'git --version'
+      echo "Branch: ${env.BRANCH_NAME}"
+      sh 'docker -v'
+      sh 'printenv'
+    }
+    stage('Build Docker test'){
+     sh 'docker build -t boxmetrics-front --no-cache .'
+    }
+    stage('Deploy'){
+      
+        sh 'docker tag boxmetrics-front 149.91.90.168:5000/boxmetrics-front'
+        sh 'docker push 149.91.90.168:5000/boxmetrics-front'
+      }
+    }
+  
+  
