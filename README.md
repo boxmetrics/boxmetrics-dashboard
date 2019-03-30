@@ -1,4 +1,4 @@
-# boxmetrics
+![boxmetrics](./.github/boxmetrics-logo.png)
 
 ## Project setup
 ```

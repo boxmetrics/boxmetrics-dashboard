@@ -4,6 +4,7 @@ import HomePage from '@/pages/HomePage';
 import LoginPage from '@/pages/auth/LoginPage';
 import RegisterPage from '@/pages/auth/RegisterPage';
 import DashIndexPage from '@/pages/dashboard/IndexPage';
+import ServersIndexPage from '@/pages/dashboard/IndexPage';
 import store from '../store';
 
 Vue.use(Router);
@@ -42,13 +43,22 @@ const router = new Router({
 			meta: {
 				title: 'boxmetrics - dashboard'
 			}
+		},
+		{
+			path: '/dashboard/servers',
+			name: 'Servers',
+			component: ServersIndexPage,
+			meta: {
+				title: 'boxmetrics - serveurs'
+			}
 		}
 	]
 });
 
 // guards
 router.beforeEach((to, from, next) => {
-	if (to.fullPath === '/dashboard') {
+	if (to.fullPath.indexOf('/dashboard') === 0) {
+		console.log(to.fullPath.indexOf('/dashboard') === 0);
 		if (!store.getters.isAuthenticated) {
 			next('/auth/login');
 		}

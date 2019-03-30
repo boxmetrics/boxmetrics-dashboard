@@ -9,29 +9,27 @@ const state = {
 };
 
 const getters = {
-	isAuthenticated: (state) => !!state.token,
-	authStatus: (state) => state.status
+	isAuthenticated: state => !!state.token,
+	authStatus: state => state.status
 };
 
 const actions = {
 	login: ({ commit, dispatch }, user) => {
 		return new Promise((resolve, reject) => {
 			commit('authLoading');
-			setTimeout(() => {
-				axios({ url: apiUrl + 'auth/login', data: user, method: 'POST' })
-					.then((res) => {
-						const token = res.data.token;
-						localStorage.setItem('user-token', token);
-						axios.defaults.headers.common['Authorization'] = token;
-						commit('authSuccess', res);
-						resolve(res);
-					})
-					.catch((err) => {
-						commit('authError', err);
-						localStorage.removeItem('user-token');
-						reject(err);
-					});
-			}, 10000);
+			axios({ url: apiUrl + 'auth/login', data: user, method: 'POST' })
+				.then(res => {
+					const token = res.data.token;
+					localStorage.setItem('user-token', token);
+					axios.defaults.headers.common['Authorization'] = token;
+					commit('authSuccess', res);
+					resolve(res);
+				})
+				.catch(err => {
+					commit('authError', err);
+					localStorage.removeItem('user-token');
+					reject(err);
+				});
 		});
 	},
 	register: ({ commit, dispatch }, user) => {},
@@ -46,7 +44,7 @@ const actions = {
 };
 
 const mutations = {
-	authLoading: (state) => {
+	authLoading: state => {
 		state.status = 'loading';
 	},
 	authSuccess: (state, resp) => {
@@ -54,11 +52,11 @@ const mutations = {
 		state.token = resp.token;
 		state.hasLoadedOnce = true;
 	},
-	authError: (state) => {
+	authError: state => {
 		state.status = 'error';
 		state.hasLoadedOnce = true;
 	},
-	authLogout: (state) => {
+	authLogout: state => {
 		state.token = '';
 	}
 };

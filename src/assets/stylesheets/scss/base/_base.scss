@@ -42,5 +42,13 @@ html {
             }
 
         }
+
+        .disabled,
+        button.disabled,
+        button:disabled {
+            opacity: .65;
+            pointer-events: none;
+            cursor: not-allowed;
+        }
     }
 }

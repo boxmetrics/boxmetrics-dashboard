@@ -104,6 +104,7 @@
       <button
         type="submit"
         class="btn submit"
+        :disabled="isLoading"
       >
         <span v-if="!isLoading">Connexion</span>
         <Loader v-else></Loader>
@@ -120,7 +121,6 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from "vuex";
 import Header from "@/components/partials/Header";
 import Footer from "@/components/partials/Footer";
 import Loader from "@/components/ui/loader";
@@ -139,9 +139,6 @@ export default {
     Loader
   },
   computed: {
-    // ...mapState({
-    //   authLoading: state => state.status === ""
-    // }),
     isLoading() {
       return this.$store.getters.authStatus === "loading";
     }
@@ -153,12 +150,6 @@ export default {
       this.$store.dispatch("login", { email, password }).then(() => {
         // eslint-disable-next-line no-console
         this.$router.push("/dashboard");
-      });
-    },
-    logout() {
-      this.$store.dispatch("logout").then(() => {
-        // eslint-disable-next-line no-console
-        console.log("logout OK");
       });
     }
   }

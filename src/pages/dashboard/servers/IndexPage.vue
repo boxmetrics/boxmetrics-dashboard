@@ -10,7 +10,7 @@
 <script>
 import Sidebar from "@/components/partials/Sidebar";
 export default {
-  name: "DashIndexPage",
+  name: "ServersIndexPage",
   data() {},
   computed: {},
   components: {
