@@ -1,12 +1,43 @@
 <template>
   <div id="app">
+    <Sidebar v-if="hasSidebar"></Sidebar>
     <router-view />
   </div>
 </template>
-
 <script>
+import Sidebar from "@/components/partials/Sidebar";
+
 export default {
-  name: "app"
+  name: "app",
+  data() {
+    return {
+      excludedRoutes: ["/", "/auth", "/profile", "/forgot_password"]
+    };
+  },
+  components: {
+    Sidebar
+  },
+  mounted() {},
+
+  computed: {
+    currentRoute() {
+      let route = this.$route.path;
+      return route;
+    },
+    hasSidebar() {
+      let b = true;
+      if (
+        this.currentRoute === "/" ||
+        JSON.parse(JSON.stringify(this.excludedRoutes)).some(
+          elem => elem !== "/" && this.currentRoute.startsWith(elem)
+        )
+      ) {
+        b = false;
+      }
+
+      return b;
+    }
+  }
 };
 </script>
 

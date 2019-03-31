@@ -1,10 +1,12 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 import HomePage from '@/pages/HomePage';
+import ProfilePage from '@/pages/ProfilePage';
 import LoginPage from '@/pages/auth/LoginPage';
 import RegisterPage from '@/pages/auth/RegisterPage';
+import ForgotPassPage from '@/pages/auth/ForgotPassPage';
 import DashIndexPage from '@/pages/dashboard/IndexPage';
-import ServersIndexPage from '@/pages/dashboard/IndexPage';
+import ServersIndexPage from '@/pages/dashboard/servers/IndexPage';
 import store from '../store';
 
 Vue.use(Router);
@@ -17,15 +19,23 @@ const router = new Router({
 			name: 'HomePage',
 			component: HomePage,
 			meta: {
-				title: 'boxmetrics - accueil'
+				title: 'boxmetrics - Acceuil'
 			}
-		},
+        },
+        {
+            path: '/profile',
+            name: 'ProfilePage',
+            component: ProfilePage,
+            meta: {
+                title: 'boxmetrics - Mon profil'
+            }
+        },
 		{
 			path: '/auth/login',
 			name: 'LoginPage',
 			component: LoginPage,
 			meta: {
-				title: 'boxmetrics - connexion'
+				title: 'boxmetrics - Connexion'
 			}
 		},
 		{
@@ -33,23 +43,31 @@ const router = new Router({
 			name: 'RegisterPage',
 			component: RegisterPage,
 			meta: {
-				title: 'boxmetrics - inscription'
+				title: 'boxmetrics - Inscription'
 			}
-		},
+        },
+        {
+            path: '/auth/forgot_password',
+            name: 'ForgotPassPage',
+            component: ForgotPassPage,
+            meta: {
+                title: 'boxmetrics - Mot de passe oublié'
+            }
+        },
 		{
 			path: '/dashboard',
 			name: 'Dashboard',
 			component: DashIndexPage,
 			meta: {
-				title: 'boxmetrics - dashboard'
+				title: 'boxmetrics - Tableau de bord'
 			}
 		},
 		{
 			path: '/dashboard/servers',
 			name: 'Servers',
-			component: ServersIndexPage,
+            component: ServersIndexPage,
 			meta: {
-				title: 'boxmetrics - serveurs'
+				title: 'boxmetrics - Serveurs'
 			}
 		}
 	]
@@ -57,8 +75,8 @@ const router = new Router({
 
 // guards
 router.beforeEach((to, from, next) => {
+    document.title = to.meta.title
 	if (to.fullPath.indexOf('/dashboard') === 0) {
-		console.log(to.fullPath.indexOf('/dashboard') === 0);
 		if (!store.getters.isAuthenticated) {
 			next('/auth/login');
 		}

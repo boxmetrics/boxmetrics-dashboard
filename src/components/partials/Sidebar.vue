@@ -23,22 +23,10 @@
         <li class="dashboard-link to-servers">
           <router-link :to="'/dashboard/servers'">Serveurs</router-link>
         </li>
-        <li class="dashboard-link to-users">
-          <router-link :to="'/dashboard/users'">Utilisateurs</router-link>
-        </li>
-        <li class="dashboard-link to-web-terminal">
-          <router-link :to="'/dashboard/web-terminal'">Web terminal</router-link>
-        </li>
-        <li class="dashboard-link to-stats">
-          <router-link :to="'/dashboard/stats'">Statistiques</router-link>
-        </li>
-        <li class="dashboard-link to-user-guide">
-          <router-link :to="'/dashboard/guide'">Guide utilisateur</router-link>
-        </li>
       </ul>
     </div>
     <div class="sidebar-footer">
-      Footer
+      Mon compte
     </div>
   </div>
 </template>
@@ -54,7 +42,7 @@ export default {
   height: 100%;
   display: flex;
   flex-direction: column;
-  width: 240px;
+  width: 210px;
   position: fixed;
   background: #2873ed;
   color: #fff;
@@ -171,6 +159,7 @@ export default {
   }
   .sidebar-footer {
     height: 60px;
+    padding: 20px;
     display: flex;
     align-items: center;
     position: relative;
