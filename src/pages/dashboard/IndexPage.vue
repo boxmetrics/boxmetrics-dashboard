@@ -1,47 +1,45 @@
 <template>
-  <div class="dashboard">
-    <div class="inner-dashboard">
-      <div class="content-container">
-        <h1>Dashboard</h1>
-      </div>
-    </div>
-  </div>
+	<div class="dashboard">
+		<div class="inner-dashboard">
+			<div class="content-container">
+				<h1>Dashboard</h1>
+			</div>
+		</div>
+	</div>
 </template>
 
 <script>
 export default {
-  name: "DashIndexPage"
+	name: "DashIndexPage"
 };
 </script>
 
-
-
 <style lang="scss" scoped>
 .dashboard {
-  height: 100%;
-  display: block;
-  .inner-dashboard {
-    height: 100%;
-    display: block;
-    padding-left: 210px;
-    background: #f8f9fd;
-    height: 100%;
-    background: #f8f9fd;
+	height: 100%;
+	display: block;
+	.inner-dashboard {
+		height: 100%;
+		display: block;
+		padding-left: 210px;
+		background: #f8f9fd;
+		height: 100%;
+		background: #f8f9fd;
 
-    p {
-      margin: 0;
-    }
+		p {
+			margin: 0;
+		}
 
-    .content-container {
-      padding: 32px !important;
-      height: 100%;
-      max-width: 100% !important;
-      h1 {
-        color: #303133;
-        margin-top: 0;
-        margin-bottom: 20px;
-      }
-    }
-  }
+		.content-container {
+			padding: 32px !important;
+			height: 100%;
+			max-width: 100% !important;
+			h1 {
+				color: #303133;
+				margin-top: 0;
+				margin-bottom: 20px;
+			}
+		}
+	}
 }
 </style>
