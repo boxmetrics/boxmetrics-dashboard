@@ -26,6 +26,10 @@
         "eslint-plugin-prettier": "^3.0.1",
         "eslint-plugin-vue": "^5.2.2",
         "prettier": "^1.16.4",
+        "stylelint": "^9.10.1",
+        "stylelint-config-standard": "^18.2.0",
+        "stylelint-processor-html": "^1.0.0",
+        "stylelint-webpack-plugin": "^0.10.5",
         "vue-template-compiler": "^2.5.21"
     },
     "eslintConfig": {

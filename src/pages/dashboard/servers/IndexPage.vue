@@ -254,8 +254,6 @@ export default {
 		display: block;
 		padding-left: 210px;
 		background: #f8f9fd;
-		height: 100%;
-		background: #f8f9fd;
 
 		p {
 			margin: 0;
@@ -286,17 +284,7 @@ export default {
 							background-color: #ffffff;
 							border-radius: 3px;
 							box-shadow: 0 2px 4px rgba(3, 27, 78, 0.06);
-							display: flex;
-							align-items: center;
-							padding: 10px;
-							justify-content: space-between;
-							margin-bottom: 20px;
-							min-height: 70px;
-							background-color: #ffffff;
-							border-radius: 3px;
-							box-shadow: 0 2px 4px rgba(3, 27, 78, 0.06);
 						}
-
 						span {
 							font-size: 14px;
 							color: #949494;
@@ -304,7 +292,6 @@ export default {
 						p {
 							margin-top: 10px;
 						}
-
 						.server-menu {
 							position: relative;
 							a {
@@ -332,20 +319,16 @@ export default {
 								top: 100%;
 								z-index: 20;
 								background-color: #ffffff;
-								box-shadow: 0 0px 4px rgba(3, 27, 78, 0.1);
+								box-shadow: 0 0 4px rgba(3, 27, 78, 0.1);
 								border-radius: 3px;
-								transition: visibility 0.2s ease 0s,
-									opacity 0.3s ease-out 0s;
-
+								transition: visibility 0.2s ease,opacity 0.3s ease-out;
 								a {
 									display: block;
 								}
-
 								.submenu-link {
 									margin: 10px 0;
 									display: block;
 									width: 100%;
-
 									a {
 										color: #303133;
 										padding: 5px 10px;
@@ -353,10 +336,7 @@ export default {
 										display: flex;
 										align-items: center;
 										font-size: 14px;
-
-										transition: background-color 0.2s ease
-											0s;
-
+										transition: background-color 0.2s ease;
 										&:hover {
 											background-color: rgba(
 												39,

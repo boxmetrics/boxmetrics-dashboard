@@ -19,17 +19,13 @@ export default {
 	height: 100%;
 	display: block;
 	.inner-dashboard {
-		height: 100%;
 		display: block;
 		padding-left: 210px;
 		background: #f8f9fd;
 		height: 100%;
-		background: #f8f9fd;
-
 		p {
 			margin: 0;
 		}
-
 		.content-container {
 			padding: 32px !important;
 			height: 100%;
