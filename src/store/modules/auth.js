@@ -32,7 +32,24 @@ const actions = {
 				});
 		});
 	},
-	register: ({ commit, dispatch }, user) => {},
+	register: ({ commit, dispatch }, user) => {
+		return new Promise((resolve, reject) => {
+			commit('authLoading');
+			axios({ url: apiUrl + 'auth/register', data: user, method: 'POST' })
+				.then(res => {
+					const token = res.data.token;
+					localStorage.setItem('user-token', token);
+					axios.defaults.headers.common['Authorization'] = token;
+					commit('authSuccess', res);
+					resolve(res);
+				})
+				.catch(err => {
+					commit('authError', err);
+					localStorage.removeItem('user-token');
+					reject(err);
+				});
+		});
+	},
 	logout: ({ commit, dispatch }) => {
 		return new Promise((resolve, reject) => {
 			commit('authLogout');

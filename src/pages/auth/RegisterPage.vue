@@ -81,30 +81,52 @@
         </ul>
       </div>
       <div class="field">
+        <div class="field">
+          <label class="label">Nom d'utilisateur</label>
+          <input
+            class="input"
+            :class="{'has-error': errors.username}"
+            required
+            v-model="username"
+            type="text"
+            placeholder="johndoe68"
+            @keydown="errors.username=''"
+          />
+          <p class="help error">{{ errors.username }}</p>
+        </div>
         <label class="label">Email</label>
         <input
           class="input"
+          :class="{'has-error': errors.email}"
           required
           v-model="email"
           type="email"
           placeholder="john.doe@email.com"
+          @keydown="errors.email=''"
         />
-
+        <p class="help error">{{ errors.email }}</p>
       </div>
       <div class="field">
         <label class="label">Mot de passe</label>
         <input
           class="input"
+          :class="{'has-error': errors.password}"
           required
           v-model="password"
           type="password"
           placeholder="••••••••••"
+          @keydown="errors.password=''"
         />
+        <p class="help error">{{ errors.password }}</p>
       </div>
       <button
         type="submit"
         class="btn submit"
-      >Inscription</button>
+        :disabled="isLoading"
+      >
+        <span v-if="!isLoading">Inscription</span>
+        <Loader v-else></Loader>
+      </button>
     </form>
     <Footer />
   </div>
@@ -113,34 +135,71 @@
 <script>
 import Header from "@/components/partials/Header";
 import Footer from "@/components/partials/Footer";
+import Loader from "@/components/ui/loader";
 
 export default {
   name: "RegisterPage",
   data() {
     return {
+      errors: {},
       email: "",
+      username: "",
       password: ""
     };
   },
   components: {
     Header,
-    Footer
+    Footer,
+    Loader
   },
-  computed: {},
+  computed: {
+    isLoading() {
+      return this.$store.getters.authStatus === "loading";
+    }
+  },
   methods: {
-    register() {
-      const { email, password } = this;
-      this.$store.dispatch(AUTH_REQUEST, { email, password }).then(() => {
-        // eslint-disable-next-line no-console
-        console.log("you can access dashboard");
-        this.$router.push("/dashboard");
-      });
+    isEmailValid(email) {
+      if (
+        !email.length ||
+        !email.match(
+          /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/
+        )
+      ) {
+        return false;
+      }
+      return true;
     },
-    logout() {
-      this.$store.dispatch(AUTH_LOGOUT).then(() => {
-        // eslint-disable-next-line no-console
-        console.log("logged out");
-      });
+    isPasswordValid(password) {
+      if (!password.length) {
+        return false;
+      }
+      return true;
+    },
+    isUsernameValid(username) {
+      if (!username.length) {
+        return false;
+      }
+      return true;
+    },
+    register() {
+      this.errors = {};
+      const { email, password, username } = this;
+      if (!this.isEmailValid(email)) {
+        this.errors.email = "Email is required and must be valid";
+      }
+      if (!this.isPasswordValid(password)) {
+        this.errors.password = "Password is required";
+      }
+      if (!this.isUsernameValid(username)) {
+        this.errors.username = "Username is required";
+      }
+      if (Object.keys(JSON.parse(JSON.stringify(this.errors))).length === 0) {
+        this.$store
+          .dispatch("register", { username, email, password })
+          .then(() => {
+            this.$router.push("/dashboard");
+          });
+      }
     }
   }
 };
@@ -261,6 +320,7 @@ export default {
     }
 
     .field {
+      position: relative;
       * {
         display: block;
         width: 100%;
@@ -288,6 +348,21 @@ export default {
         &:focus {
           border-color: #2874ed;
         }
+
+        &.has-error {
+          border-color: #ff3860;
+        }
+      }
+
+      p.help {
+        margin: 0;
+        position: absolute;
+        bottom: -15px;
+        font-size: 12px;
+
+        &.error {
+          color: #ff3860;
+        }
       }
     }
     .submit {
@@ -305,6 +380,11 @@ export default {
       padding: 14px;
       border-radius: 3px;
       margin-top: 20px;
+    }
+    .forgot-password {
+      display: block;
+      margin-top: 20px;
+      text-align: center;
     }
   }
 }
