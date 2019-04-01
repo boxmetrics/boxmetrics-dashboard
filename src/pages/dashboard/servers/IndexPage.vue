@@ -321,7 +321,8 @@ export default {
 								background-color: #ffffff;
 								box-shadow: 0 0 4px rgba(3, 27, 78, 0.1);
 								border-radius: 3px;
-								transition: visibility 0.2s ease,opacity 0.3s ease-out;
+								transition: visibility 0.2s ease,
+									opacity 0.3s ease-out;
 								a {
 									display: block;
 								}
