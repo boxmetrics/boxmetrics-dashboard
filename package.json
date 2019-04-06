@@ -8,17 +8,17 @@
 	},
 	"dependencies": {
 		"axios": "^0.18.0",
-		"dotenv": "^6.2.0",
+		"dotenv": "^7.0.0",
 		"node-sass": "^4.11.0",
 		"sass-loader": "^7.1.0",
-		"vue": "^2.5.22",
+		"vue": "^2.6.10",
 		"vue-router": "^3.0.2",
 		"vuex": "^3.1.0"
 	},
 	"devDependencies": {
-		"@vue/cli-plugin-babel": "^3.4.0",
-		"@vue/cli-plugin-eslint": "^3.4.0",
-		"@vue/cli-service": "^3.4.0",
+		"@vue/cli-plugin-babel": "^3.5.5",
+		"@vue/cli-plugin-eslint": "^3.5.1",
+		"@vue/cli-service": "^3.5.3",
 		"babel-eslint": "^10.0.1",
 		"eslint": "^5.16.0",
 		"eslint-config-prettier": "^4.1.0",
@@ -29,7 +29,7 @@
 		"stylelint-config-standard": "^18.2.0",
 		"stylelint-processor-html": "^1.0.0",
 		"stylelint-webpack-plugin": "^0.10.5",
-		"vue-template-compiler": "^2.5.21"
+		"vue-template-compiler": "^2.6.10"
 	},
 	"eslintConfig": {
 		"root": true,
