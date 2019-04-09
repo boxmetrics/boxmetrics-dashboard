@@ -6,7 +6,6 @@
       sh 'git --version'
       echo "Branch: ${env.BRANCH_NAME}"
       sh 'docker -v'
-      
     }
     stage('Build Docker test'){
      sh 'docker build -t boxmetrics-front-app .'
@@ -14,8 +13,8 @@
     stage('Deploy'){
       
         sh 'docker login -u maxence -p maxence registry.labo-devops.ml'
-        sh 'docker tag boxmetrics-front registry.labo-devops.ml/boxmetrics-front-app'
-        sh 'docker push registry.labo-devops.ml/boxmetrics-front'
+        sh 'docker tag boxmetrics-front-app registry.labo-devops.ml/boxmetrics-front-app'
+        sh 'docker push registry.labo-devops.ml/boxmetrics-front-app'
           
         
       }
