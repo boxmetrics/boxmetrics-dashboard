@@ -7,8 +7,8 @@
       echo "Branch: ${env.BRANCH_NAME}"
       sh 'docker -v'
       withCredentials([string(credentialsId: 'REGISTRY_PWD', variable: 'REGISTRY_pwd'), string(credentialsId: 'REGISTRY_USER', variable: 'REGISTRY_user')]) {
-        sh echo REGISTRY_user
-        sh echo REGISTRY_pwd
+        sh 'echo REGISTRY_user'
+        sh 'echo REGISTRY_pwd'
         }
     }
     stage('Build Docker test'){
