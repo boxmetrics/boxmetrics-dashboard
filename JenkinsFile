@@ -3,7 +3,7 @@
          REGISTRY_pwd = credentials('REGISTRY_PWD')
          REGISTRY_user = credentials('REGISTRY_USER')
     }
-Ò
+
     stage('Checkout') {
        checkout scm
     }
