@@ -1,4 +1,4 @@
-FROM node:lts-alpine
+FROM node:jessie
 
 # installe un simple serveur http pour servir un contenu statique
 RUN npm install -g http-server
@@ -8,6 +8,7 @@ WORKDIR /app
 
 # copie 'package.json' et 'package-lock.json' (si disponible)
 COPY package*.json ./
+
 
 # installe les dépendances du projet
 RUN npm install
