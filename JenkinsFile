@@ -2,7 +2,7 @@
     environment {
          REGISTRY_PWD = credentials('REGISTRY_PWD')
          REGISTRY_USER = credentials('REGISTRY_USER')
-         
+    }
 }
     stage('Checkout') {
        checkout scm
