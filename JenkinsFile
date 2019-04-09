@@ -11,12 +11,8 @@
      sh 'docker build -t boxmetrics-front-app .'
     }
     stage('Deploy'){
-      
-        sh 'docker login -u maxence -p maxence registry.labo-devops.ml'
-        sh 'docker tag boxmetrics-front-app registry.labo-devops.ml/boxmetrics-front-app'
-        sh 'docker push registry.labo-devops.ml/boxmetrics-front-app'
-          
-        
+        sh 'docker tag boxmetrics-front-app 149.91.90.168:5000/boxmetrics-front-app'
+        sh 'docker push 149.91.90.168:5000/boxmetrics-front-app'
       }
     }
   
