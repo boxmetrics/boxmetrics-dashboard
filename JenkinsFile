@@ -18,7 +18,7 @@
     }
     stage('Deploy'){
       
-        sh 'docker login -u ${REGISTRY_USER} -p ${REGISTRY_PWD} registry.labo-devops.ml'
+        sh 'docker login -u "${REGISTRY_USER} -p "${REGISTRY_PWD} registry.labo-devops.ml'
         sh 'docker tag boxmetrics-front registry.labo-devops.ml/boxmetrics-front-app'
         sh 'docker push registry.labo-devops.ml/boxmetrics-front'
           
