@@ -11,12 +11,12 @@
      sh 'docker build -t boxmetrics-front-app --no-cache .'
     }
     stage('Deploy'){
-      REGISTRY_USER = credentials('REGISTRY_USER')
-      REGISTRY_PWD = credentials('REGISTRY_PWD')
-      echo REGISTRY_USER
+      withCredentials([string(credentialsId: 'REGISTRY_PWD', variable: 'REGISTRY_PWD'), string(credentialsId: 'REGISTRY_USER', variable: 'REGISTRY_USER')]) {
         sh 'docker login -u REGISTRY_USER -p REGISTRY_PWD registry.labo-devops.ml'
         sh 'docker tag boxmetrics-front registry.labo-devops.ml/boxmetrics-front-app'
         sh 'docker push registry.labo-devops.ml/boxmetrics-front'
+          }
+        
       }
     }
   
