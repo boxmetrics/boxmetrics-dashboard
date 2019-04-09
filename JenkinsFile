@@ -1,9 +1,4 @@
   node {
-    environment {
-         pwd = credentials('REGISTRY_PWD')
-         REGISTRY_user = credentials('REGISTRY_USER')
-    }
-
     stage('Checkout') {
        checkout scm
     }
@@ -18,7 +13,7 @@
     }
     stage('Deploy'){
       
-        sh 'docker login -u maxence -p ${pwd} registry.labo-devops.ml'
+        sh 'docker login -u maxence -p maxence registry.labo-devops.ml'
         sh 'docker tag boxmetrics-front registry.labo-devops.ml/boxmetrics-front-app'
         sh 'docker push registry.labo-devops.ml/boxmetrics-front'
           
