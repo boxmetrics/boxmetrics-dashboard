@@ -1,7 +1,7 @@
   node {
     environment {
-         REGISTRY_PWD = credentials('REGISTRY_PWD')
-         REGISTRY_USER = credentials('REGISTRY_USER')
+         REGISTRY_pwd = credentials('REGISTRY_PWD')
+         REGISTRY_user = credentials('REGISTRY_USER')
     }
 }
     stage('Checkout') {
@@ -18,7 +18,7 @@
     }
     stage('Deploy'){
       
-        sh 'docker login -u "${REGISTRY_USER} -p "${REGISTRY_PWD} registry.labo-devops.ml'
+        sh 'docker login -u "${REGISTRY_user} -p "${REGISTRY_pwd} registry.labo-devops.ml'
         sh 'docker tag boxmetrics-front registry.labo-devops.ml/boxmetrics-front-app'
         sh 'docker push registry.labo-devops.ml/boxmetrics-front'
           
