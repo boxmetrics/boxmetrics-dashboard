@@ -14,7 +14,7 @@
       
     }
     stage('Build Docker test'){
-     sh 'docker build -t boxmetrics-front-app --no-cache .'
+     sh 'docker build -t boxmetrics-front-app .'
     }
     stage('Deploy'){
       
