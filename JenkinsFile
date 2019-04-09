@@ -6,12 +6,18 @@
       sh 'git --version'
       echo "Branch: ${env.BRANCH_NAME}"
       sh 'docker -v'
+      withCredentials([string(credentialsId: 'REGISTRY_PWD', variable: 'REGISTRY_pwd'), string(credentialsId: 'REGISTRY_USER', variable: 'REGISTRY_user')]) {
+        sh echo REGISTRY_user
+        sh echo REGISTRY_pwd
+        }
     }
     stage('Build Docker test'){
      sh 'docker build -t boxmetrics-front-app --no-cache .'
     }
     stage('Deploy'){
-      withCredentials([string(credentialsId: 'REGISTRY_PWD', variable: 'REGISTRY_PWD'), string(credentialsId: 'REGISTRY_USER', variable: 'REGISTRY_USER')]) {
+      withCredentials([string(credentialsId: 'REGISTRY_PWD', variable: 'REGISTRY_pwd'), string(credentialsId: 'REGISTRY_USER', variable: 'REGISTRY_user')]) {
+        sh echo REGISTRY_user
+        sh echo REGISTRY_pwd
         sh 'docker login -u REGISTRY_USER -p REGISTRY_PWD registry.labo-devops.ml'
         sh 'docker tag boxmetrics-front registry.labo-devops.ml/boxmetrics-front-app'
         sh 'docker push registry.labo-devops.ml/boxmetrics-front'
