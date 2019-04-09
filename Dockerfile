@@ -1,4 +1,4 @@
-FROM node:jessie
+FROM node:lts-alpine
 
 # installe un simple serveur http pour servir un contenu statique
 RUN npm install -g http-server
