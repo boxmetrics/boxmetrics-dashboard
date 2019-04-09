@@ -6,7 +6,7 @@
 
     stage('Checkout') {
        checkout scm
-       echo ${REGISTRY_user}
+       echo "${REGISTRY_user}"
     }
     stage('Environment') {
       sh 'git --version'
