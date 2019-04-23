@@ -11,11 +11,8 @@
      sh 'docker build -t boxmetrics-front-app --no-cache .'
     }
     stage('Deploy'){
-      REGISTRY_USER = credentials('REGISTRY_USER')
-      REGISTRY_PWD = credentials('REGISTRY_PWD')
-        sh 'docker login -u REGISTRY_USER -p REGISTRY_PWD registry.labo-devops.ml'
-        sh 'docker tag boxmetrics-front registry.labo-devops.ml/boxmetrics-front-app'
-        sh 'docker push registry.labo-devops.ml/boxmetrics-front'
+        sh 'docker tag boxmetrics-front-app 149.91.90.168:5000/boxmetrics-front-app'
+        sh 'docker push 149.91.90.168:5000/boxmetrics-front-app'
       }
     }
   
