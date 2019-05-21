@@ -1,19 +1,30 @@
-  node {
-    stage('Checkout') {
-       checkout scm
-    }
-    stage('Environment') {
-      sh 'git --version'
-      echo "Branch: ${env.BRANCH_NAME}"
-      sh 'docker -v'
-    }
-    stage('Build Docker test'){
-     sh 'docker build -t boxmetrics-front-app --no-cache .'
-    }
-    stage('Deploy'){
-        sh 'docker tag boxmetrics-front-app 149.91.90.168:5000/boxmetrics-front-app'
-        sh 'docker push 149.91.90.168:5000/boxmetrics-front-app'
-      }
-    }
-  
-  
+pipeline {
+ agent any
+ stage('Checkout') {
+  checkout scm
+ }
+ stage('Environment') {
+  steps {
+   sh 'git --version'
+   echo "Build number : env.BUILD_NUMBER"
+   sh 'docker -v'
+   sh 'docker ps'
+  }
+ }
+ stage('Build and Push') {
+  steps {
+   withDockerRegistry(url: 'http://149.91.90.168:5000', credentialsId: 'e56a6c40-97c8-4a3c-afbb-ff7182917c31', ) {
+    app = docker.build("registry.labo-devops.ml/boxmetrics-front:${env.BUILD_NUMBER}")
+    app.push()
+   }
+  }
+ }
+ stage('Deploy to Dev') {
+  steps {
+   sh 'docker ps'
+   sh 'docker stop boxmetrics-front-dev'
+   sh 'docker rm boxmetrics-front-dev'
+   sh 'docker run -d -p 82:80 --name boxmetrics-front-dev registry.labo-devops.ml/boxmetrics-front:${env.BUILD_NUMBER}'
+  }
+ }
+}
