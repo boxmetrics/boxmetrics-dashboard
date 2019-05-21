@@ -14,14 +14,7 @@ Vue.use(Router);
 const router = new Router({
 	mode: "history",
 	routes: [
-		{
-			path: "/",
-			name: "HomePage",
-			component: HomePage,
-			meta: {
-				title: "boxmetrics - Acceuil"
-			}
-		},
+		{path: "/", redirect: "/dashboard"},
 		{
 			path: "/profile",
 			name: "ProfilePage",
