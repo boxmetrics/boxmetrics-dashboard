@@ -1,6 +1,5 @@
 import Vue from "vue";
 import Router from "vue-router";
-import HomePage from "@/pages/HomePage";
 import ProfilePage from "@/pages/ProfilePage";
 import LoginPage from "@/pages/auth/LoginPage";
 import RegisterPage from "@/pages/auth/RegisterPage";
@@ -18,14 +17,7 @@ Vue.use(Router);
 const router = new Router({
 	mode: "history",
 	routes: [
-		{
-			path: "/",
-			name: "HomePage",
-			component: HomePage,
-			meta: {
-				title: "boxmetrics - Acceuil"
-			}
-		},
+		{path: "/", redirect: "/dashboard"},
 		{
 			path: "/profile",
 			name: "ProfilePage",
@@ -110,6 +102,7 @@ const router = new Router({
 });
 
 // guards
+// eslint-disable-next-line no-unused-vars
 router.beforeEach((to, from, next) => {
 	document.title = to.meta.title;
 	if (to.fullPath.indexOf("/dashboard") === 0) {
