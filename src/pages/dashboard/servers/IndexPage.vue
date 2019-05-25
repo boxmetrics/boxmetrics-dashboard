@@ -356,8 +356,8 @@
 				<Loader
 					v-else
 					:strokeColor="'#2873ed'"
-					:width="35"
-					:height="35"
+					:width="'35'"
+					:height="'35'"
 				></Loader>
 			</div>
 		</div>
@@ -464,22 +464,8 @@ export default {
 
 <style lang="scss" scoped>
 .dashboard {
-	height: 100%;
-	display: block;
 	.inner-dashboard {
-		height: 100%;
-		display: block;
-		padding-left: 210px;
-		background: #f8f9fd;
-
-		p {
-			margin: 0;
-		}
 		.dashboard-content {
-			padding: 32px !important;
-			height: 100%;
-			max-width: 100% !important;
-
 			.dashboard-header {
 				display: flex;
 				align-items: center;
