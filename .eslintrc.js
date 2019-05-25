@@ -1,54 +1,60 @@
 module.exports = {
 	root: true,
-	extends: ['plugin:vue/essential', 'plugin:prettier/recommended', 'eslint:recommended'],
+	extends: [
+		"plugin:vue/essential",
+		"plugin:prettier/recommended",
+		"eslint:recommended"
+	],
 	globals: {
-		process: 'writable',
-		require: 'writable',
-		module: 'writable'
+		process: "writable",
+		require: "writable",
+		module: "writable"
 	},
 	rules: {
-		'linebreak-style': ['error', 'unix'],
-		quotes: ['error', 'double'],
-		semi: ['error', 'always'],
-		'arrow-body-style': ['error', 'always'],
+		"linebreak-style": ["error", "unix"],
+		quotes: ["error", "double"],
+		semi: ["error", "always"],
+		"arrow-body-style": ["error", "always"],
 		radix: 0,
-		'no-shadow': [
+		"no-shadow": [
 			2,
 			{
-				hoist: 'all',
-				allow: ['resolve', 'reject', 'done', 'next', 'err', 'error']
+				hoist: "all",
+				allow: ["resolve", "reject", "done", "next", "err", "error"]
 			}
 		],
-		'no-unused-expressions': [
-			'error',
+		"no-unused-expressions": [
+			"error",
 			{
 				allowShortCircuit: true,
 				allowTernary: true,
 				allowTaggedTemplates: true
 			}
 		],
-		'no-unused-vars': [
-			1,
+		"no-unused-vars": [
+			"error",
 			{
-				argsIgnorePattern: 'res|^err'
+				vars: "all",
+				args: "all",
+				argsIgnorePattern: "res|^err"
 			}
 		],
-		'no-param-reassign': [
-			'error',
+		"no-param-reassign": [
+			"error",
 			{
 				props: false
 			}
 		],
-		'one-var-declaration-per-line': ['error', 'initializations'],
-		'import/core-modules': ['vue', 'vuex'],
-		'prefer-const': [
-			'error',
+		"one-var-declaration-per-line": ["error", "initializations"],
+		"import/core-modules": ["vue", "vuex"],
+		"prefer-const": [
+			"error",
 			{
-				destructuring: 'all'
+				destructuring: "all"
 			}
 		],
-		'prettier/prettier': [
-			'error',
+		"prettier/prettier": [
+			"error",
 			{
 				singleQuote: false,
 				printWidth: 80,
