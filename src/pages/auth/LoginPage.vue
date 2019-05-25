@@ -176,7 +176,7 @@ export default {
 				0
 			) {
 				this.$store.dispatch("login", {email, password}).then(() => {
-					this.$router.push("/dashboard");
+					this.$router.go();
 				});
 			}
 		}

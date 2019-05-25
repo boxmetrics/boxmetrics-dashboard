@@ -105,17 +105,20 @@ const router = new Router({
 // eslint-disable-next-line no-unused-vars
 router.beforeEach((to, from, next) => {
 	document.title = to.meta.title;
-	if (to.fullPath.indexOf("/dashboard") === 0) {
-		if (!store.getters.isAuthenticated) {
-			next("/auth/login");
-		}
+	if (
+		!store.getters.isAuthenticated &&
+		to.fullPath.indexOf("/dashboard") === 0
+	) {
+		next("/auth/login");
+	} else {
+		next();
 	}
+
 	if (to.fullPath === "/auth/login") {
 		if (store.getters.isAuthenticated) {
 			next("/dashboard");
 		}
 	}
-	next();
 });
 
 export default router;
