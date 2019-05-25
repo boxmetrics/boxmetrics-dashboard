@@ -122,7 +122,7 @@
 <script>
 import Header from "@/components/partials/Header";
 import Footer from "@/components/partials/Footer";
-import Loader from "@/components/ui/loader";
+import Loader from "@/components/ui/Loader";
 
 export default {
 	name: "LoginPage",

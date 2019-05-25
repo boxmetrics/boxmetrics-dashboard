@@ -14,6 +14,9 @@ const getters = {
 	},
 	authStatus: status => {
 		return status.status;
+	},
+	getToken: () => {
+		return localStorage.getItem("user-token") || "";
 	}
 };
 

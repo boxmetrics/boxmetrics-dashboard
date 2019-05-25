@@ -2,9 +2,151 @@
 	<div class="dashboard serr">
 		<div class="inner-dashboard">
 			<div class="dashboard-content">
-				<h1>Serveurs</h1>
+				<div class="dashboard-header">
+					<h1>Serveurs</h1>
+					<ul class="actions">
+						<li>
+							<a
+								class="btn add-server"
+								@click.prevent="showModal"
+							>
+								Ajouter un serveur
+							</a>
+						</li>
+					</ul>
+				</div>
+				<div v-if="!isLoading" class="dashboard-section">
+					<modal v-show="isModalVisible" @close="closeModal">
+						<template #header>
+							<div>
+								Ajouter un serveur
+							</div>
+						</template>
+						<template #body>
+							<form class="add-server-form">
+								<div class="field">
+									<label class="label">Nom du serveur</label>
+									<input
+										class="input"
+										:class="{
+											'has-error': errors.serverName
+										}"
+										required
+										v-model="fields.serverName"
+										type="text"
+										@keydown="errors.serverName = ''"
+									/>
+									<p class="help error">
+										{{ errors.serverName }}
+									</p>
+								</div>
 
-				<div class="dashboard-section">
+								<div class="field">
+									<label class="label"
+										>Adresse du serveur</label
+									>
+									<input
+										class="input"
+										:class="{
+											'has-error': errors.serverHost
+										}"
+										required
+										v-model="fields.serverHost"
+										type="text"
+										@keydown="errors.serverHost = ''"
+									/>
+									<p class="help error">
+										{{ errors.serverHost }}
+									</p>
+								</div>
+
+								<div class="field">
+									<label class="label">Port du serveur</label>
+									<input
+										class="input"
+										:class="{
+											'has-error': errors.serverPort
+										}"
+										required
+										v-model="fields.serverPort"
+										type="text"
+										@keydown="errors.serverPort = ''"
+									/>
+									<p class="help error">
+										{{ errors.serverPort }}
+									</p>
+								</div>
+
+								<div class="field">
+									<label class="label">OS du serveur</label>
+									<input
+										class="input"
+										:class="{
+											'has-error': errors.serverOS
+										}"
+										required
+										v-model="fields.serverOS"
+										type="text"
+										@keydown="errors.serverOS = ''"
+									/>
+									<p class="help error">
+										{{ errors.serverOS }}
+									</p>
+								</div>
+
+								<div class="field">
+									<label class="label"
+										>Utilisateur du serveur</label
+									>
+									<input
+										class="input"
+										:class="{
+											'has-error': errors.serverUsername
+										}"
+										required
+										v-model="fields.serverUsername"
+										type="text"
+										@keydown="errors.serverUsername = ''"
+									/>
+									<p class="help error">
+										{{ errors.serverUsername }}
+									</p>
+								</div>
+								<div class="field">
+									<label class="label"
+										>Mot de passe du serveur</label
+									>
+									<input
+										class="input"
+										:class="{
+											'has-error': errors.serverPassword
+										}"
+										required
+										v-model="fields.serverPassword"
+										type="password"
+										@keydown="errors.serverPassword = ''"
+									/>
+									<p class="help error">
+										{{ errors.serverPassword }}
+									</p>
+								</div>
+							</form>
+						</template>
+						<template #footer>
+							<div>
+								<button class="btn cancel" @click="closeModal">
+									Annuler
+								</button>
+								<button
+									@click.prevent="addServer"
+									class="btn submit"
+									:disabled="errors.length > 0"
+								>
+									Ajouter
+								</button>
+							</div>
+						</template>
+					</modal>
 					<ul class="server-list">
 						<li
 							class="row server"
@@ -16,7 +158,11 @@
 									Nom
 								</span>
 								<p>
-									<a href="#">{{ server.name }}</a>
+									<router-link
+										:to="`/dashboard/servers/${server._id}`"
+									>
+										{{ server.name }}
+									</router-link>
 								</p>
 							</div>
 							<div class="server-ip-address">
@@ -24,23 +170,17 @@
 									Adresse IP
 								</span>
 								<p>
-									{{ server.ip }}
-								</p>
-							</div>
-							<div class="server-hostname">
-								<span>
-									Nom d'hôte
-								</span>
-								<p>
-									{{ server.hostname }}
+									{{ server.host }}
 								</p>
 							</div>
 							<div class="server-uptime">
 								<span>
-									Durée de disponibilité
+									Ajouté il y a
 								</span>
 								<p>
-									{{ server.uptime }}
+									{{
+										$moment(server.createdOn).fromNow(true)
+									}}
 								</p>
 							</div>
 							<div class="server-os">
@@ -60,7 +200,7 @@
 								</p>
 							</div>
 							<div class="server-menu">
-								<a class="trigger-link" @click="showDropdown">
+								<a class="trigger-link">
 									<svg
 										xmlns="http://www.w3.org/2000/svg"
 										xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -84,7 +224,13 @@
 									<div class="dropdown-content">
 										<ul class="dropdown-submenu">
 											<li class="submenu-link">
-												<a href="">
+												<router-link
+													:to="
+														`/dashboard/servers/${
+															server._id
+														}/webterminal`
+													"
+												>
 													<svg
 														xmlns="http://www.w3.org/2000/svg"
 														width="1792"
@@ -95,12 +241,17 @@
 															d="M649 983l-466 466q-10 10-23 10t-23-10l-50-50q-10-10-10-23t10-23l393-393-393-393q-10-10-10-23t10-23l50-50q10-10 23-10t23 10l466 466q10 10 10 23t-10 23zm1079 457v64q0 14-9 23t-23 9h-960q-14 0-23-9t-9-23v-64q0-14 9-23t23-9h960q14 0 23 9t9 23z"
 														/>
 													</svg>
-
-													Web terminal</a
-												>
+													Web terminal
+												</router-link>
 											</li>
 											<li class="submenu-link">
-												<a href="">
+												<router-link
+													:to="
+														`/dashboard/servers/${
+															server._id
+														}/accounts`
+													"
+												>
 													<svg
 														xmlns="http://www.w3.org/2000/svg"
 														xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -159,11 +310,17 @@
 														</g>
 													</svg>
 
-													Gestion d'utilisateurs</a
-												>
+													Gestion d'utilisateurs
+												</router-link>
 											</li>
 											<li class="submenu-link">
-												<a href="">
+												<router-link
+													:to="
+														`/dashboard/servers/${
+															server._id
+														}/config`
+													"
+												>
 													<svg
 														enable-background="new 0 0 64 64"
 														height="64px"
@@ -186,8 +343,8 @@
 															/>
 														</g>
 													</svg>
-													Configuration</a
-												>
+													Configuration
+												</router-link>
 											</li>
 										</ul>
 									</div>
@@ -196,50 +353,110 @@
 						</li>
 					</ul>
 				</div>
+				<Loader
+					v-else
+					:strokeColor="'#2873ed'"
+					:width="35"
+					:height="35"
+				></Loader>
 			</div>
 		</div>
 	</div>
 </template>
 
 <script>
+import axios from "axios";
+import {apiUrl} from "../../../config";
+import Modal from "@/components/partials/Modal";
+import Loader from "@/components/ui/Loader";
+
 export default {
 	name: "ServersIndexPage",
 	data() {
 		return {
-			servers: [
-				{
-					name: "Mon serveur linux 1",
-					ip: "192.0.2.1",
-					hostname: "prod-server",
-					uptime: "146 jours, 34 min",
-					os: "Ubuntu 16.04.2 LTS",
-					status: "actif"
-				},
-				{
-					name: "Mon serveur linux 2",
-					ip: "192.0.2.1",
-					hostname: "prod-server",
-					uptime: "146 jours, 34 min",
-					os: "Ubuntu 16.04.2 LTS",
-					status: "actif"
-				},
-				{
-					name: "Mon serveur linux 3",
-					ip: "192.0.2.1",
-					hostname: "prod-server",
-					uptime: "146 jours, 34 min",
-					os: "Ubuntu 16.04.2 LTS",
-					status: "actif"
-				}
-			]
+			servers: [],
+			errors: {},
+			isModalVisible: false,
+			isLoading: true,
+			fields: {
+				serverName: "",
+				serverHost: "",
+				serverPort: "",
+				serverOS: "",
+				serverUsername: "",
+				serverPassword: ""
+			}
 		};
 	},
+	mounted() {
+		if (
+			this.$store.getters.getToken === undefined ||
+			this.$store.getters.getToken === ""
+		) {
+			return;
+		}
+		const token = this.$store.getters.getToken;
+		axios
+			.get(`${apiUrl}servers`, {
+				headers: {"x-access-token": token}
+			})
+			.then(response => {
+				this.servers = response.data.servers;
+				this.isLoading = false;
+			});
+	},
+	components: {
+		Modal,
+		Loader
+	},
 	methods: {
-		showDropdown(e) {
-			e.preventDefault();
-			e.target.parentElement
-				.querySelector(".dropdown-menu")
-				.classList.add("is-active");
+		showModal() {
+			this.isModalVisible = true;
+		},
+		closeModal() {
+			this.resetForm();
+			this.isModalVisible = false;
+		},
+		isFieldValid(value) {
+			if (!value.length) {
+				return false;
+			}
+			return true;
+		},
+		addServer() {
+			this.errors = {};
+			for (const field in this.fields) {
+				if (!this.isFieldValid(this.fields[field])) {
+					this.errors[field] =
+						"This field is required and must be valid";
+				}
+			}
+
+			if (
+				Object.keys(JSON.parse(JSON.stringify(this.errors))).length ===
+				0
+			) {
+				// test adding server
+				// we need to refresh data
+				this.servers.push({
+					name: "Mon serveur linux 2",
+					ip: "192.0.2.2",
+					hostname: "prod-server",
+					uptime: "146 jours, 34 min",
+					os: "Ubuntu 16.04.2 LTS",
+					status: "inactif"
+				});
+				// fields to submit
+				// JSON.parse(JSON.stringify(this.fields))
+				this.closeModal();
+				this.resetForm();
+			}
+		},
+		resetForm() {
+			this.errors = {};
+			for (const field in this.fields) {
+				this.fields[field] = "";
+			}
 		}
 	}
 };
@@ -262,10 +479,41 @@ export default {
 			padding: 32px !important;
 			height: 100%;
 			max-width: 100% !important;
-			h1 {
-				color: #303133;
-				margin-top: 0;
+
+			.dashboard-header {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
 				margin-bottom: 30px;
+				h1 {
+					color: #303133;
+					margin-top: 0;
+					margin-bottom: 30px;
+				}
+				.actions {
+					padding: 0;
+					margin: 0;
+					list-style: none;
+
+					.add-server {
+						position: relative;
+						font-size: 14px;
+						padding: 12px;
+						padding-left: 40px;
+
+						&::before {
+							content: "";
+							position: absolute;
+							top: 50%;
+							transform: translateY(-50%);
+							left: 5%;
+							background: url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgdmVyc2lvbj0iMS4xIiB2aWV3Qm94PSIwIDAgNDQgNDQiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDQ0IDQ0IiB3aWR0aD0iNTEycHgiIGhlaWdodD0iNTEycHgiPiAgPHBhdGggZD0iTTIyLDBDOS44LDAsMCw5LjgsMCwyMnM5LjgsMjIsMjIsMjJzMjItOS44LDIyLTIyUzM0LjIsMCwyMiwweiBNMzQsMjNjMCwwLjYtMC40LDEtMSwxaC04LjVjLTAuMywwLTAuNSwwLjItMC41LDAuNVYzMyAgYzAsMC42LTAuNCwxLTEsMWgtMmMtMC42LDAtMS0wLjQtMS0xdi04LjVjMC0wLjMtMC4yLTAuNS0wLjUtMC41SDExYy0wLjYsMC0xLTAuNC0xLTF2LTJjMC0wLjYsMC40LTEsMS0xaDguNSAgYzAuMywwLDAuNS0wLjIsMC41LTAuNVYxMWMwLTAuNiwwLjQtMSwxLTFoMmMwLjYsMCwxLDAuNCwxLDF2OC41YzAsMC4zLDAuMiwwLjUsMC41LDAuNUgzM2MwLjYsMCwxLDAuNCwxLDFWMjN6IiBmaWxsPSIjRkZGRkZGIi8+PC9zdmc+")
+								center no-repeat / 18px;
+							width: 22px;
+							height: 22px;
+						}
+					}
+				}
 			}
 			.dashboard-section {
 				ul {
@@ -367,8 +615,101 @@ export default {
 						}
 					}
 				}
+
+				.modal {
+					form {
+						&.add-server-form {
+							padding: 0 20px;
+							.field {
+								position: relative;
+								* {
+									display: block;
+									width: 100%;
+									margin-bottom: 10px;
+								}
+
+								.input {
+									background: #fcfcfc;
+									border: 2px solid #e7e7e7;
+									margin: 10px auto;
+									padding: 10px 15px;
+									width: 100%;
+									display: block;
+									border-radius: 3px;
+									font-size: 18px;
+									transition: border-color ease-in-out 0.15s,
+										box-shadow ease-in-out 0.15s;
+									text-align: left;
+									height: auto;
+									-webkit-appearance: none;
+									outline: none;
+
+									&:hover {
+										border-color: rgba(39, 117, 237, 0.23);
+									}
+									&:focus {
+										border-color: #2874ed;
+									}
+
+									&.has-error {
+										border-color: #ff3860;
+									}
+								}
+
+								p.help {
+									margin: 0;
+									position: absolute;
+									bottom: -15px;
+									font-size: 12px;
+
+									&.error {
+										color: #ff3860;
+									}
+								}
+							}
+						}
+					}
+					.modal-footer {
+						> div {
+							display: flex;
+							button {
+								padding: 12px 20px;
+								&:first-child {
+									margin-right: 10px;
+								}
+
+								&.cancel {
+									color: #303133;
+									background: transparent;
+
+									&:hover {
+										background: #e7e7e7;
+									}
+								}
+								&.submit {
+								}
+							}
+						}
+					}
+				}
 			}
 		}
+	}
+
+	.btn {
+		color: #ffffff;
+		background: #2874ed;
+		border: 0;
+		font-weight: 500;
+		font-size: 14px;
+		text-align: center;
+		margin-bottom: 0;
+		height: auto;
+		-webkit-appearance: none;
+		width: 100%;
+		padding: 14px;
+		border-radius: 3px;
+		cursor: pointer;
 	}
 }
 </style>

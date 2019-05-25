@@ -2,15 +2,15 @@
 	<div>
 		<span class="loader">
 			<svg
-				width="20"
-				height="20"
+				:width="width"
+				:height="height"
 				viewBox="0 0 30 30"
 				xmlns="http://www.w3.org/2000/svg"
 				data-svg="spinner"
 			>
 				<circle
 					fill="none"
-					stroke="#ffffff"
+					:stroke="strokeColor"
 					cx="15"
 					cy="15"
 					r="14"
@@ -21,7 +21,21 @@
 </template>
 <script>
 export default {
-	name: "loader"
+	name: "Loader",
+	props: {
+		strokeColor: {
+			type: String,
+			default: "#ffffff"
+		},
+		width: {
+			type: String,
+			default: "20"
+		},
+		height: {
+			type: String,
+			default: "20"
+		}
+	}
 };
 </script>
 
