@@ -4,6 +4,7 @@ import {apiUrl} from "../../config";
 
 const state = {
 	token: localStorage.getItem("user-token") || "",
+	userId: localStorage.getItem("user-id") || "",
 	status: "",
 	hasLoadedOnce: false
 };
@@ -15,8 +16,11 @@ const getters = {
 	authStatus: status => {
 		return status.status;
 	},
-	getToken: () => {
-		return localStorage.getItem("user-token") || "";
+	getToken: status => {
+		return status.token;
+	},
+	getUserId: status => {
+		return status.userId;
 	}
 };
 
@@ -26,9 +30,11 @@ const actions = {
 			commit("authLoading");
 			axios({url: apiUrl + "auth/login", data: user, method: "POST"})
 				.then(res => {
-					const token = res.data.token;
+					const token = res.data.token,
+						userId = res.data.user._id;
 					localStorage.setItem("user-token", token);
-					axios.defaults.headers.common["Authorization"] = token;
+					localStorage.setItem("user-id", userId);
+					axios.defaults.headers.common["x-access-token"] = token;
 					commit("authSuccess", res);
 					resolve(res);
 				})
@@ -44,9 +50,11 @@ const actions = {
 			commit("authLoading");
 			axios({url: apiUrl + "auth/register", data: user, method: "POST"})
 				.then(res => {
-					const token = res.data.token;
+					const token = res.data.token,
+						userId = res.data.user._id;
 					localStorage.setItem("user-token", token);
-					axios.defaults.headers.common["Authorization"] = token;
+					localStorage.setItem("user-id", userId);
+					axios.defaults.headers.common["x-access-token"] = token;
 					commit("authSuccess", res);
 					resolve(res);
 				})
@@ -61,7 +69,8 @@ const actions = {
 		return new Promise((resolve, reject) => {
 			commit("authLogout");
 			localStorage.removeItem("user-token");
-			delete axios.defaults.headers.common["Authorization"];
+			localStorage.removeItem("user-id");
+			delete axios.defaults.headers.common["x-access-token"];
 			resolve();
 		});
 	}

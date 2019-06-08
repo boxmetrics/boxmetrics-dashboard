@@ -49,6 +49,22 @@ html {
 			cursor: not-allowed;
 		}
 
+		.btn {
+			color: #ffffff;
+			background: #2874ed;
+			border: 0;
+			font-weight: 500;
+			font-size: 14px;
+			text-align: center;
+			margin-bottom: 0;
+			height: auto;
+			-webkit-appearance: none;
+			width: 100%;
+			padding: 14px;
+			border-radius: 3px;
+			cursor: pointer;
+		}
+
 		// Base dashboard
 
 		.dashboard {
@@ -74,6 +90,81 @@ html {
 						color: #303133;
 						margin-top: 0;
 						margin-bottom: 20px;
+					}
+				}
+			}
+		}
+
+		// Base forms
+
+		form {
+			.grouped {
+				@media (min-width: $phone) {
+					display: flex;
+					flex-basis: 0;
+					flex-grow: 5;
+					flex-shrink: 1;
+
+					.field {
+						flex: 1;
+
+						&:first-of-type {
+							padding-right: 5px;
+						}
+
+						&:last-of-type {
+							padding-left: 5px;
+						}
+					}
+				}
+			}
+
+			.field {
+				position: relative;
+
+				* {
+					display: block;
+					width: 100%;
+					margin-bottom: 10px;
+				}
+
+				.input {
+					background: #fcfcfc;
+					border: 2px solid #e7e7e7;
+					margin: 10px auto;
+					padding: 10px 15px;
+					width: 100%;
+					display: block;
+					border-radius: 3px;
+					font-size: 18px;
+					transition: border-color ease-in-out 0.15s,
+						box-shadow ease-in-out 0.15s;
+					text-align: left;
+					height: auto;
+					-webkit-appearance: none;
+					outline: none;
+
+					&:hover {
+						border-color: rgba(39, 117, 237, 0.23);
+					}
+
+					&:focus {
+						border-color: #2874ed;
+					}
+
+					&.has-error {
+						border-color: #ff3860;
+					}
+				}
+
+				p.help {
+					margin: 0;
+					position: absolute;
+					bottom: -15px;
+					font-size: 12px;
+
+					&.error {
+						color: #ff3860;
 					}
 				}
 			}
