@@ -36,7 +36,8 @@ const router = new Router({
 			component: RegisterPage,
 			meta: {
 				title: "boxmetrics - Inscription"
-			}
+			},
+			redirect: "/auth/login"
 		},
 		{
 			path: "/auth/forgot_password",
