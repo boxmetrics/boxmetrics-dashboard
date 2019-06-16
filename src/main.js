@@ -3,6 +3,7 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 import VueNativeSock from "vue-native-websocket";
+import moment from "moment";
 
 Vue.config.productionTip = false;
 
@@ -14,6 +15,11 @@ Vue.use(VueNativeSock, "ws://localhost:8080", {
 	reconnectionAttempts: 5000,
 	reconnectionDelay: 300
 });
+
+// Local date
+moment.locale("fr");
+// Add moment globally
+Vue.prototype.$moment = moment;
 
 new Vue({
 	render: h => {

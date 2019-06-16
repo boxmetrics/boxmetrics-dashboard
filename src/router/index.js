@@ -6,6 +6,10 @@ import RegisterPage from "@/pages/auth/RegisterPage";
 import ForgotPassPage from "@/pages/auth/ForgotPassPage";
 import DashIndexPage from "@/pages/dashboard/IndexPage";
 import ServersIndexPage from "@/pages/dashboard/servers/IndexPage";
+import ServerAccountsPage from "@/pages/dashboard/servers/AccountsPage";
+import ServerConfigPage from "@/pages/dashboard/servers/ConfigPage";
+import ServerInfosPage from "@/pages/dashboard/servers/InfosPage";
+import ServerWebTerminalPage from "@/pages/dashboard/servers/WebTerminalPage";
 import store from "../store";
 
 Vue.use(Router);
@@ -62,6 +66,38 @@ const router = new Router({
 			meta: {
 				title: "boxmetrics - Serveurs"
 			}
+		},
+		{
+			path: "/dashboard/servers/:id",
+			name: "ServerInfos",
+			component: ServerInfosPage,
+			meta: {
+				title: "boxmetrics - Serveurs"
+			}
+		},
+		{
+			path: "/dashboard/servers/:id/config",
+			name: "ServerConfig",
+			component: ServerConfigPage,
+			meta: {
+				title: "boxmetrics - Serveurs"
+			}
+		},
+		{
+			path: "/dashboard/servers/:id/accounts",
+			name: "ServerAccounts",
+			component: ServerAccountsPage,
+			meta: {
+				title: "boxmetrics - Serveurs"
+			}
+		},
+		{
+			path: "/dashboard/servers/:id/webterminal",
+			name: "ServerWebTerminal",
+			component: ServerWebTerminalPage,
+			meta: {
+				title: "boxmetrics - Serveurs"
+			}
 		}
 	]
 });
@@ -70,17 +106,20 @@ const router = new Router({
 // eslint-disable-next-line no-unused-vars
 router.beforeEach((to, from, next) => {
 	document.title = to.meta.title;
-	if (to.fullPath.indexOf("/dashboard") === 0) {
-		if (!store.getters.isAuthenticated) {
-			next("/auth/login");
-		}
+	if (
+		!store.getters.isAuthenticated &&
+		to.fullPath.indexOf("/dashboard") === 0
+	) {
+		next("/auth/login");
+	} else {
+		next();
 	}
+
 	if (to.fullPath === "/auth/login") {
 		if (store.getters.isAuthenticated) {
 			next("/dashboard");
 		}
 	}
-	next();
 });
 
 export default router;

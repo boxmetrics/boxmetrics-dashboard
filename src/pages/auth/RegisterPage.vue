@@ -78,19 +78,19 @@
 				</ul>
 			</div>
 			<div class="field">
-				<div class="field">
-					<label class="label">Nom d'utilisateur</label>
-					<input
-						class="input"
-						:class="{'has-error': errors.username}"
-						required
-						v-model="username"
-						type="text"
-						placeholder="johndoe68"
-						@keydown="errors.username = ''"
-					/>
-					<p class="help error">{{ errors.username }}</p>
-				</div>
+				<label class="label">Nom d'utilisateur</label>
+				<input
+					class="input"
+					:class="{'has-error': errors.username}"
+					required
+					v-model="username"
+					type="text"
+					placeholder="johndoe68"
+					@keydown="errors.username = ''"
+				/>
+				<p class="help error">{{ errors.username }}</p>
+			</div>
+			<div class="field">
 				<label class="label">Email</label>
 				<input
 					class="input"
@@ -116,7 +116,11 @@
 				/>
 				<p class="help error">{{ errors.password }}</p>
 			</div>
-			<button type="submit" class="btn submit" :disabled="isLoading">
+			<button
+				type="submit"
+				class="btn submit"
+				:disabled="isLoading || errors.length > 0"
+			>
 				<span v-if="!isLoading">Inscription</span>
 				<Loader v-else></Loader>
 			</button>
@@ -128,7 +132,7 @@
 <script>
 import Header from "@/components/partials/Header";
 import Footer from "@/components/partials/Footer";
-import Loader from "@/components/ui/loader";
+import Loader from "@/components/ui/Loader";
 
 export default {
 	name: "RegisterPage",
