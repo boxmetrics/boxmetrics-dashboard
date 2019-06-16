@@ -9,6 +9,7 @@ Vue.config.productionTip = false;
 // TODO: Replace wss url
 Vue.use(VueNativeSock, "ws://localhost:8080", {
 	format: "json",
+	store: store,
 	reconnection: true,
 	reconnectionAttempts: 5000,
 	reconnectionDelay: 300
