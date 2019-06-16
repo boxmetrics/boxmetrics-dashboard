@@ -122,7 +122,7 @@
 <script>
 import Header from "@/components/partials/Header";
 import Footer from "@/components/partials/Footer";
-import Loader from "@/components/ui/loader";
+import Loader from "@/components/ui/Loader";
 
 export default {
 	name: "LoginPage",
@@ -176,7 +176,7 @@ export default {
 				0
 			) {
 				this.$store.dispatch("login", {email, password}).then(() => {
-					this.$router.push("/dashboard");
+					this.$router.go();
 				});
 			}
 		}

@@ -13,7 +13,7 @@
 				<li class="dashboard-link to-index">
 					<router-link :to="'/dashboard'">Dashboard</router-link>
 				</li>
-				<li class="dashboard-link to-servers">
+				<li class="dashboard-link to-servers has-submenu">
 					<router-link :to="'/dashboard/servers'"
 						>Serveurs</router-link
 					>
@@ -28,7 +28,15 @@
 
 <script>
 export default {
-	name: "Sidebar"
+	name: "Sidebar",
+	methods: {
+		showDropdown(e) {
+			e.preventDefault();
+			e.target.parentElement
+				.querySelector(".dropdown-menu")
+				.classList.add("is-active");
+		}
+	}
 };
 </script>
 

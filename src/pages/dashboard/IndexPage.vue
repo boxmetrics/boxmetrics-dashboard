@@ -3,6 +3,7 @@
 		<div class="inner-dashboard">
 			<div class="content-container">
 				<h1>Dashboard</h1>
+				<div class="dashboard-section"></div>
 			</div>
 		</div>
 	</div>

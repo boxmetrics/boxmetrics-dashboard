@@ -2,9 +2,177 @@
 	<div class="dashboard serr">
 		<div class="inner-dashboard">
 			<div class="dashboard-content">
-				<h1>Serveurs</h1>
+				<div class="dashboard-header">
+					<h1>Serveurs</h1>
+					<ul class="actions">
+						<li>
+							<a
+								class="btn add-server"
+								@click.prevent="showModal"
+							>
+								<i class="icon ion-ios-add-circle"></i>Ajouter
+								un serveur
+							</a>
+						</li>
+					</ul>
+				</div>
+				<div v-if="!isLoading" class="dashboard-section">
+					<modal v-show="isModalVisible" @close="closeModal">
+						<template #header>
+							<div>
+								Ajouter un serveur
+							</div>
+						</template>
+						<template #body>
+							<form class="add-server-form">
+								<div class="field">
+									<label class="label">Nom du serveur</label>
+									<input
+										class="input"
+										:class="{
+											'has-error': errors.name
+										}"
+										required
+										v-model="fields.name"
+										type="text"
+										@keydown="errors.name = ''"
+									/>
+									<p class="help error">
+										{{ errors.name }}
+									</p>
+								</div>
+								<div class="grouped">
+									<div class="field">
+										<label class="label"
+											>Adresse du serveur</label
+										>
+										<input
+											class="input"
+											:class="{
+												'has-error': errors.host
+											}"
+											required
+											v-model="fields.host"
+											type="text"
+											@keydown="errors.host = ''"
+										/>
+										<p class="help error">
+											{{ errors.host }}
+										</p>
+									</div>
 
-				<div class="dashboard-section">
+									<div class="field">
+										<label class="label"
+											>Port du serveur</label
+										>
+										<input
+											class="input"
+											:class="{
+												'has-error': errors.port
+											}"
+											required
+											v-model="fields.port"
+											type="text"
+											@keydown="errors.port = ''"
+										/>
+										<p class="help error">
+											{{ errors.port }}
+										</p>
+									</div>
+								</div>
+
+								<div class="field">
+									<label class="label">OS du serveur</label>
+									<input
+										class="input"
+										:class="{
+											'has-error': errors.os
+										}"
+										required
+										v-model="fields.os"
+										type="text"
+										@keydown="errors.os = ''"
+									/>
+									<p class="help error">
+										{{ errors.os }}
+									</p>
+								</div>
+								<div class="grouped">
+									<div class="field">
+										<label class="label"
+											>Utilisateur du serveur</label
+										>
+										<input
+											class="input"
+											:class="{
+												'has-error': errors.username
+											}"
+											required
+											v-model="fields.username"
+											type="text"
+											@keydown="errors.username = ''"
+										/>
+										<p class="help error">
+											{{ errors.username }}
+										</p>
+									</div>
+									<div class="field">
+										<label class="label"
+											>Mot de passe du serveur</label
+										>
+										<input
+											class="input"
+											:class="{
+												'has-error': errors.password
+											}"
+											required
+											v-model="fields.password"
+											type="password"
+											@keydown="errors.password = ''"
+										/>
+										<p class="help error">
+											{{ errors.password }}
+										</p>
+									</div>
+								</div>
+								<div class="field">
+									<label class="label">Clé SSH</label>
+									<textarea
+										class="input"
+										v-model="fields.privateKey"
+										type="text"
+									></textarea>
+								</div>
+							</form>
+						</template>
+						<template #footer>
+							<div>
+								<button
+									class="btn cancel"
+									@keyup.27="closeModal"
+									@click="closeModal"
+								>
+									Annuler
+								</button>
+								<button
+									@click.prevent="addServer"
+									class="btn submit"
+									:disabled="addPending"
+								>
+									<span v-if="addPending === false">
+										Ajouter
+									</span>
+
+									<Loader
+										v-else
+										:strokeColor="'#fff'"
+										:width="'20'"
+										:height="'20'"
+									></Loader>
+								</button>
+							</div>
+						</template>
+					</modal>
 					<ul class="server-list">
 						<li
 							class="row server"
@@ -16,7 +184,11 @@
 									Nom
 								</span>
 								<p>
-									<a href="#">{{ server.name }}</a>
+									<router-link
+										:to="`/dashboard/servers/${server._id}`"
+									>
+										{{ server.name }}
+									</router-link>
 								</p>
 							</div>
 							<div class="server-ip-address">
@@ -24,23 +196,17 @@
 									Adresse IP
 								</span>
 								<p>
-									{{ server.ip }}
-								</p>
-							</div>
-							<div class="server-hostname">
-								<span>
-									Nom d'hôte
-								</span>
-								<p>
-									{{ server.hostname }}
+									{{ server.host }}
 								</p>
 							</div>
 							<div class="server-uptime">
 								<span>
-									Durée de disponibilité
+									Ajouté il y a
 								</span>
 								<p>
-									{{ server.uptime }}
+									{{
+										$moment(server.createdOn).fromNow(true)
+									}}
 								</p>
 							</div>
 							<div class="server-os">
@@ -60,22 +226,9 @@
 								</p>
 							</div>
 							<div class="server-menu">
-								<a class="trigger-link" @click="showDropdown">
-									<svg
-										xmlns="http://www.w3.org/2000/svg"
-										xmlns:xlink="http://www.w3.org/1999/xlink"
-										id="Layer_1"
-										enable-background="new 0 0 24 24"
-										version="1.0"
-										viewBox="0 0 24 24"
-										xml:space="preserve"
-									>
-										<circle cx="12" cy="12" r="2" />
-										<circle cx="12" cy="5" r="2" />
-										<circle cx="12" cy="19" r="2" />
-									</svg>
-								</a>
-
+								<a class="trigger-link"
+									><i class="icon ion-md-more"></i
+								></a>
 								<div
 									class="dropdown-menu"
 									id="dropdown-menu"
@@ -83,111 +236,49 @@
 								>
 									<div class="dropdown-content">
 										<ul class="dropdown-submenu">
-											<li class="submenu-link">
-												<a href="">
-													<svg
-														xmlns="http://www.w3.org/2000/svg"
-														width="1792"
-														height="1792"
-														viewBox="0 0 1792 1792"
-													>
-														<path
-															d="M649 983l-466 466q-10 10-23 10t-23-10l-50-50q-10-10-10-23t10-23l393-393-393-393q-10-10-10-23t10-23l50-50q10-10 23-10t23 10l466 466q10 10 10 23t-10 23zm1079 457v64q0 14-9 23t-23 9h-960q-14 0-23-9t-9-23v-64q0-14 9-23t23-9h960q14 0 23 9t9 23z"
-														/>
-													</svg>
-
-													Web terminal</a
+											<li
+												class="submenu-link webterminal"
+											>
+												<router-link
+													:to="
+														`/dashboard/servers/${
+															server._id
+														}/webterminal`
+													"
 												>
+													<i
+														class="icon ion-ios-code"
+													></i
+													>Web terminal
+												</router-link>
 											</li>
-											<li class="submenu-link">
-												<a href="">
-													<svg
-														xmlns="http://www.w3.org/2000/svg"
-														xmlns:xlink="http://www.w3.org/1999/xlink"
-														id="Layer_1"
-														enable-background="new 0 0 24 24"
-														version="1.0"
-														viewBox="0 0 24 24"
-														xml:space="preserve"
-													>
-														<g>
-															<path
-																d="M9,9c0-1.7,1.3-3,3-3s3,1.3,3,3c0,1.7-1.3,3-3,3S9,10.7,9,9z M12,14c-4.6,0-6,3.3-6,3.3V19h12v-1.7C18,17.3,16.6,14,12,14z   "
-															/>
-														</g>
-														<g>
-															<g>
-																<circle
-																	cx="18.5"
-																	cy="8.5"
-																	r="2.5"
-																/>
-															</g>
-															<g>
-																<path
-																	d="M18.5,13c-1.2,0-2.1,0.3-2.8,0.8c2.3,1.1,3.2,3,3.2,3.2l0,0.1H23v-1.3C23,15.7,21.9,13,18.5,13z"
-																/>
-															</g>
-														</g>
-														<g>
-															<g>
-																<circle
-																	cx="18.5"
-																	cy="8.5"
-																	r="2.5"
-																/>
-															</g>
-															<g>
-																<path
-																	d="M18.5,13c-1.2,0-2.1,0.3-2.8,0.8c2.3,1.1,3.2,3,3.2,3.2l0,0.1H23v-1.3C23,15.7,21.9,13,18.5,13z"
-																/>
-															</g>
-														</g>
-														<g>
-															<g>
-																<circle
-																	cx="5.5"
-																	cy="8.5"
-																	r="2.5"
-																/>
-															</g>
-															<g>
-																<path
-																	d="M5.5,13c1.2,0,2.1,0.3,2.8,0.8c-2.3,1.1-3.2,3-3.2,3.2l0,0.1H1v-1.3C1,15.7,2.1,13,5.5,13z"
-																/>
-															</g>
-														</g>
-													</svg>
-
-													Gestion d'utilisateurs</a
+											<li class="submenu-link accounts">
+												<router-link
+													:to="
+														`/dashboard/servers/${
+															server._id
+														}/accounts`
+													"
 												>
+													<i
+														class="icon ion-ios-people"
+													></i
+													>Gestion d'utilisateurs
+												</router-link>
 											</li>
-											<li class="submenu-link">
-												<a href="">
-													<svg
-														enable-background="new 0 0 64 64"
-														height="64px"
-														id="Layer_1"
-														version="1.1"
-														viewBox="0 0 64 64"
-														width="64px"
-														xml:space="preserve"
-														xmlns="http://www.w3.org/2000/svg"
-														xmlns:xlink="http://www.w3.org/1999/xlink"
-													>
-														<g>
-															<circle
-																cx="32"
-																cy="32"
-																r="4.167"
-															/>
-															<path
-																d="M55.192,27.87l-5.825-1.092c-0.354-1.178-0.818-2.308-1.392-3.371l3.37-4.927c0.312-0.456,0.248-1.142-0.143-1.532   l-4.155-4.156c-0.391-0.391-1.076-0.454-1.532-0.143l-4.928,3.372c-1.094-0.59-2.259-1.063-3.473-1.42l-1.086-5.794   c-0.103-0.543-0.632-0.983-1.185-0.983h-5.877c-0.553,0-1.082,0.44-1.185,0.983l-1.097,5.851c-1.165,0.356-2.282,0.82-3.334,1.392   l-4.866-3.329c-0.456-0.312-1.142-0.248-1.532,0.143l-4.156,4.156c-0.391,0.391-0.454,1.076-0.143,1.532l3.35,4.896   c-0.564,1.052-1.021,2.168-1.371,3.331L8.808,27.87c-0.542,0.103-0.982,0.632-0.982,1.185v5.877c0,0.553,0.44,1.082,0.982,1.185   l5.82,1.091c0.355,1.188,0.823,2.328,1.401,3.399l-3.312,4.842c-0.312,0.456-0.248,1.142,0.143,1.532l4.155,4.156   c0.391,0.391,1.076,0.454,1.532,0.143l4.84-3.313c1.041,0.563,2.146,1.021,3.299,1.375l1.097,5.852   c0.103,0.542,0.632,0.982,1.185,0.982h5.877c0.553,0,1.082-0.44,1.185-0.982l1.086-5.796c1.201-0.354,2.354-0.821,3.438-1.401   l4.902,3.354c0.456,0.312,1.142,0.248,1.532-0.143l4.155-4.154c0.391-0.391,0.454-1.076,0.143-1.532l-3.335-4.874   c0.589-1.084,1.063-2.237,1.423-3.44l5.819-1.091c0.542-0.103,0.982-0.632,0.982-1.185v-5.877   C56.175,28.502,55.734,27.973,55.192,27.87z M32,42.085c-5.568,0-10.083-4.515-10.083-10.086c0-5.567,4.515-10.083,10.083-10.083   c5.57,0,10.086,4.516,10.086,10.083C42.086,37.57,37.569,42.085,32,42.085z"
-															/>
-														</g>
-													</svg>
-													Configuration</a
+											<li class="submenu-link config">
+												<router-link
+													:to="
+														`/dashboard/servers/${
+															server._id
+														}/config`
+													"
 												>
+													<i
+														class="icon ion-ios-settings"
+													></i
+													>Configuration
+												</router-link>
 											</li>
 										</ul>
 									</div>
@@ -196,50 +287,140 @@
 						</li>
 					</ul>
 				</div>
+				<Loader
+					v-else
+					:strokeColor="'#2873ed'"
+					:width="'35'"
+					:height="'35'"
+				></Loader>
 			</div>
 		</div>
 	</div>
 </template>
 
 <script>
+import axios from "axios";
+import Modal from "@/components/partials/Modal";
+import Loader from "@/components/ui/Loader";
+import {apiUrl} from "../../../config";
+import {parseToObject} from "../../../utils";
+
 export default {
 	name: "ServersIndexPage",
 	data() {
 		return {
-			servers: [
-				{
-					name: "Mon serveur linux 1",
-					ip: "192.0.2.1",
-					hostname: "prod-server",
-					uptime: "146 jours, 34 min",
-					os: "Ubuntu 16.04.2 LTS",
-					status: "actif"
-				},
-				{
-					name: "Mon serveur linux 2",
-					ip: "192.0.2.1",
-					hostname: "prod-server",
-					uptime: "146 jours, 34 min",
-					os: "Ubuntu 16.04.2 LTS",
-					status: "actif"
-				},
-				{
-					name: "Mon serveur linux 3",
-					ip: "192.0.2.1",
-					hostname: "prod-server",
-					uptime: "146 jours, 34 min",
-					os: "Ubuntu 16.04.2 LTS",
-					status: "actif"
-				}
-			]
+			token: null,
+			currentUserId: null,
+			servers: [],
+			errors: {},
+			isModalVisible: false,
+			isLoading: true,
+			addPending: false,
+			fields: {
+				name: "",
+				host: "",
+				port: "",
+				os: "",
+				username: "",
+				password: "",
+				privateKey: ""
+			}
 		};
 	},
+	mounted() {
+		if (
+			this.$store.getters.getToken === undefined ||
+			this.$store.getters.getToken === ""
+		) {
+			return;
+		}
+		this.token = this.$store.getters.getToken;
+		this.currentUserId = this.$store.getters.getUserId;
+		this.fetchData();
+	},
+	created() {
+		window.addEventListener("keyup", this.closeOnEscape);
+	},
+	components: {
+		Modal,
+		Loader
+	},
 	methods: {
-		showDropdown(e) {
-			e.preventDefault();
-			e.target.parentElement
-				.querySelector(".dropdown-menu")
-				.classList.add("is-active");
+		showModal() {
+			this.isModalVisible = true;
+		},
+		closeModal() {
+			this.resetForm();
+			this.isModalVisible = false;
+		},
+		isFieldValid(value) {
+			if (!value.length) {
+				return false;
+			}
+			return true;
+		},
+		closeOnEscape(e) {
+			const key = e.which || e.keyCode || e.detail;
+			if (key === 27 && this.isModalVisible === true) {
+				this.closeModal();
+			}
+		},
+		addServer() {
+			this.errors = {};
+			for (const field in this.fields) {
+				// TODO: remove tmp fix
+				if (
+					!this.isFieldValid(this.fields[field]) &&
+					field !== "privateKey"
+				) {
+					this.errors[field] =
+						"Ce champs et requis et doit être valide";
+				}
+			}
+
+			if (Object.keys(parseToObject(this.errors)).length === 0) {
+				this.fields.user = this.currentUserId;
+				this.addPending = true;
+				axios
+					.post(`${apiUrl}servers`, parseToObject(this.fields), {
+						headers: {"x-access-token": this.token}
+					})
+					.then(response => {
+						console.log(response);
+					})
+					.catch(error => {
+						// eslint-disable-next-line no-console
+						console.log(error);
+					});
+
+				setTimeout(() => {
+					this.addPending = false;
+					this.closeModal();
+					this.refreshData();
+					this.resetForm();
+				}, 1500);
+			}
+		},
+		resetForm() {
+			this.errors = {};
+			for (const field in this.fields) {
+				this.fields[field] = "";
+			}
+		},
+		fetchData() {
+			axios
+				.get(`${apiUrl}servers`, {
+					headers: {
+						"x-access-token": this.token
+					}
+				})
+				.then(response => {
+					this.servers = response.data.servers;
+					this.isLoading = false;
+				});
+		},
+		refreshData() {
+			this.fetchData();
 		}
 	}
 };
@@ -247,32 +428,48 @@ export default {
 
 <style lang="scss" scoped>
 .dashboard {
-	height: 100%;
-	display: block;
 	.inner-dashboard {
-		height: 100%;
-		display: block;
-		padding-left: 210px;
-		background: #f8f9fd;
-
-		p {
-			margin: 0;
-		}
 		.dashboard-content {
-			padding: 32px !important;
-			height: 100%;
-			max-width: 100% !important;
-			h1 {
-				color: #303133;
-				margin-top: 0;
+			.dashboard-header {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
 				margin-bottom: 30px;
+
+				h1 {
+					color: #303133;
+					margin-top: 0;
+					margin-bottom: 30px;
+				}
+
+				.actions {
+					padding: 0;
+					margin: 0;
+					list-style: none;
+
+					.add-server {
+						position: relative;
+						font-size: 14px;
+						padding: 12px;
+						display: flex;
+						align-items: center;
+						justify-content: center;
+
+						> .icon {
+							font-size: 18px;
+							margin-right: 10px;
+						}
+					}
+				}
 			}
+
 			.dashboard-section {
 				ul {
 					list-style: none;
 					padding: 0;
 					max-width: 1200px;
 					margin: auto;
+
 					li {
 						&:not(.dropdown-item):not(.submenu-link) {
 							display: flex;
@@ -285,31 +482,41 @@ export default {
 							border-radius: 3px;
 							box-shadow: 0 2px 4px rgba(3, 27, 78, 0.06);
 						}
+
 						span {
 							font-size: 14px;
 							color: #949494;
 						}
+
 						p {
 							margin-top: 10px;
 						}
+
 						.server-menu {
 							position: relative;
+
+							&:hover {
+								.dropdown-menu {
+									visibility: visible;
+									opacity: 1;
+								}
+							}
+
 							a {
 								&.trigger-link {
 									width: 20px;
 									height: 30px;
 									display: block;
 									color: #949494;
+									position: relative;
 									cursor: pointer;
-									svg {
-										color: #949494;
-										fill: #949494;
-										width: 100%;
-										height: 100%;
-										pointer-events: none !important;
-									}
+									font-size: 22px;
+									display: flex;
+									align-items: center;
+									justify-content: center;
 								}
 							}
+
 							.dropdown-menu {
 								visibility: hidden;
 								opacity: 0;
@@ -323,21 +530,36 @@ export default {
 								border-radius: 3px;
 								transition: visibility 0.2s ease,
 									opacity 0.3s ease-out;
+
 								a {
 									display: block;
 								}
+
 								.submenu-link {
 									margin: 10px 0;
 									display: block;
 									width: 100%;
+
 									a {
 										color: #303133;
-										padding: 5px 10px;
+										padding: 5px 15px;
 										width: 100%;
 										display: flex;
 										align-items: center;
 										font-size: 14px;
 										transition: background-color 0.2s ease;
+										position: relative;
+
+										&::after {
+											position: absolute;
+											top: -4px;
+											left: 18px;
+											display: block;
+											content: "";
+											width: 20px;
+											height: 30px;
+										}
+
 										&:hover {
 											background-color: rgba(
 												39,
@@ -347,21 +569,108 @@ export default {
 											);
 										}
 
-										svg {
+										> .icon {
 											margin-right: 10px;
 											color: #949494;
-											fill: #949494;
-											width: 15px;
-											max-height: 20px;
+											font-size: 16px;
 										}
 									}
 								}
 							}
+						}
+					}
+				}
 
-							&:hover {
-								.dropdown-menu {
-									visibility: visible;
-									opacity: 1;
+				form {
+					.field {
+						margin-bottom: 20px;
+						textarea {
+							height: 100px;
+							min-height: 100px;
+							width: 100%;
+						}
+					}
+				}
+
+				.modal {
+					form {
+						&.add-server-form {
+							padding: 0 20px;
+
+							.field {
+								position: relative;
+
+								* {
+									display: block;
+									width: 100%;
+									margin-bottom: 10px;
+								}
+
+								.input {
+									background: #fcfcfc;
+									border: 2px solid #e7e7e7;
+									margin: 10px auto;
+									padding: 10px 15px;
+									width: 100%;
+									display: block;
+									border-radius: 3px;
+									font-size: 16px;
+									transition: border-color ease-in-out 0.15s,
+										box-shadow ease-in-out 0.15s;
+									text-align: left;
+									height: auto;
+									-webkit-appearance: none;
+									outline: none;
+
+									&:hover {
+										border-color: rgba(39, 117, 237, 0.23);
+									}
+
+									&:focus {
+										border-color: #2874ed;
+									}
+
+									&.has-error {
+										border-color: #ff3860;
+									}
+								}
+
+								p.help {
+									margin: 0;
+									position: absolute;
+									bottom: -15px;
+									font-size: 12px;
+
+									&.error {
+										color: #ff3860;
+									}
+								}
+							}
+						}
+					}
+
+					.modal-footer {
+						> div {
+							display: flex;
+
+							button {
+								padding: 12px 20px;
+
+								&:first-child {
+									margin-right: 10px;
+								}
+
+								&.cancel {
+									color: #303133;
+									background: transparent;
+
+									&:hover {
+										background: #e7e7e7;
+									}
+								}
+
+								&.submit {
+									min-width: 90px;
 								}
 							}
 						}

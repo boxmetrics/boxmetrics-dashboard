@@ -36,7 +36,7 @@ module.exports = {
 			{
 				vars: "all",
 				args: "all",
-				argsIgnorePattern: "res|^err"
+				argsIgnorePattern: "res|^err|dispatch|reject"
 			}
 		],
 		"no-param-reassign": [
