@@ -301,7 +301,7 @@
 <script>
 import axios from "axios";
 import Modal from "@/components/partials/Modal";
-import Loader from "@/components/ui/Loader";
+import Loader from "@/components/ui/loader";
 import {apiUrl} from "../../../config";
 import {parseToObject} from "../../../utils";
 

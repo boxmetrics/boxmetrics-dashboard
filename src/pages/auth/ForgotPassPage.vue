@@ -34,7 +34,7 @@
 <script>
 import Header from "@/components/partials/Header";
 import Footer from "@/components/partials/Footer";
-import Loader from "@/components/ui/Loader";
+import Loader from "@/components/ui/loader";
 
 export default {
 	name: "ForgotPassPage",
