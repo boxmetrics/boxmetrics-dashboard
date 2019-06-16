@@ -4,6 +4,7 @@
 			<div class="dashboard-content">
 				<div class="dashboard-header">
 					<h1>Serveurs</h1>
+          <!-- <button @click="getData()">Get infos</button> -->
 					<ul class="actions">
 						<li>
 							<a
@@ -422,6 +423,17 @@ export default {
 		refreshData() {
 			this.fetchData();
 		}
+    getData(dataType) {
+			this.$socket.sendObj({value: "toto"});
+			// this.$socket.sendObj({type: dataType});
+		},
+	},
+  beforeMount() {
+		this.$options.sockets.onmessage = message => {
+			this.socketMessage = message;
+			// eslint-disable-next-line no-console
+			console.log({message});
+		};
 	}
 };
 </script>

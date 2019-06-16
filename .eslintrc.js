@@ -20,7 +20,15 @@ module.exports = {
 			2,
 			{
 				hoist: "all",
-				allow: ["resolve", "reject", "done", "next", "err", "error"]
+				allow: [
+					"resolve",
+					"reject",
+					"done",
+					"next",
+					"state",
+					"dispatch",
+					"^err"
+				]
 			}
 		],
 		"no-unused-expressions": [
@@ -36,7 +44,7 @@ module.exports = {
 			{
 				vars: "all",
 				args: "all",
-				argsIgnorePattern: "res|^err|dispatch|reject"
+				argsIgnorePattern: "res|^err|state|dispatch|event|context"
 			}
 		],
 		"no-param-reassign": [
