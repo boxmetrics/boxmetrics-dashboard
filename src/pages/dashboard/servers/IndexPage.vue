@@ -3,7 +3,7 @@
 		<div class="inner-dashboard">
 			<div class="dashboard-content">
 				<h1>Serveurs</h1>
-
+				<button @click="getData()">Get infos</button>
 				<div class="dashboard-section">
 					<ul class="server-list">
 						<li
@@ -206,6 +206,7 @@ export default {
 	name: "ServersIndexPage",
 	data() {
 		return {
+			socketMessage: {},
 			servers: [
 				{
 					name: "Mon serveur linux 1",
@@ -235,12 +236,22 @@ export default {
 		};
 	},
 	methods: {
+		getData(dataType) {
+			this.$socket.sendObj({value: "toto"});
+			// this.$socket.sendObj({type: dataType});
+		},
 		showDropdown(e) {
 			e.preventDefault();
 			e.target.parentElement
 				.querySelector(".dropdown-menu")
 				.classList.add("is-active");
 		}
+	},
+	beforeMount() {
+		this.$options.sockets.onmessage = message => {
+			this.socketMessage = message;
+			console.log({message});
+		};
 	}
 };
 </script>
