@@ -6,13 +6,20 @@
 				<div class="dashboard-section">
 					{{ $route.params.id }}
 				</div>
+                <div class="webterminal">
+                    <Terminal></Terminal>
+                </div>
 			</div>
 		</div>
 	</div>
 </template>
 
 <script>
+import Terminal from "@/components/ui/terminal";
 export default {
-	name: "ServerWebTerminalPage"
+    name: "ServerWebTerminalPage",
+    components: {
+		Terminal
+	}
 };
 </script>
