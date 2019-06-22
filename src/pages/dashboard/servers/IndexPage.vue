@@ -409,7 +409,7 @@ export default {
 		},
 		fetchData() {
 			axios
-				.get(`${apiUrl}servers`, {
+				.get(`${apiUrl}servers?u=${this.currentUserId}`, {
 					headers: {
 						"x-access-token": this.token
 					}
