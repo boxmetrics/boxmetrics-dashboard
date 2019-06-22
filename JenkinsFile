@@ -33,8 +33,8 @@ pipeline {
     echo 'Build and push'
     withCredentials([string(credentialsId: 'SERVER', variable: 'SERVER')]) {
      withDockerRegistry(credentialsId: 'ecr:us-west-2:aws-cred', url: 'https://${SERVER}') {
-      sh "docker tag boxmetrics-front ${SERVER}:${env.BRANCH_NAME}-build-${env.BUILD_NUMBER}"
-      sh "docker push ${SERVER}:${env.BRANCH_NAME}-build-${env.BUILD_NUMBER}"
+      sh "docker tag boxmetrics-front ${SERVER}/boxmetrics-front:${env.BRANCH_NAME}-build-${env.BUILD_NUMBER}"
+      sh "docker push ${SERVER}/boxmetrics-front:${env.BRANCH_NAME}-build-${env.BUILD_NUMBER}"
       sh 'docker ps'
       sh 'docker stop boxmetrics-front-dev || true'
       sh 'docker rm boxmetrics-front-dev'
