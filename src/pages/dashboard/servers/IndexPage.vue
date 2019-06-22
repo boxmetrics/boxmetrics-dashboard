@@ -304,8 +304,7 @@ import axios from "axios";
 import Modal from "@/components/partials/Modal";
 import Loader from "@/components/ui/loader";
 import {apiUrl} from "../../../config";
-import {debug, parseToObject} from "../../../utils";
-import {setInterval, clearInterval} from "timers";
+import {debug, parseToObject, server} from "../../../utils";
 
 export default {
 	name: "ServersIndexPage",
@@ -342,7 +341,6 @@ export default {
 	},
 	created() {
 		window.addEventListener("keyup", this.closeOnEscape);
-		this.$store.commit("SET_SOCKET_URL", "ws://192.168.1.69:4455/ws/v1");
 	},
 	components: {
 		Modal,
@@ -424,17 +422,6 @@ export default {
 		refreshData() {
 			this.fetchData();
 		}
-	},
-	beforeMount() {
-		const checkConnection = setInterval(() => {
-			if (this.$store.getters.isConnected === true) {
-				this.$socket.sendObj({type: "info", value: "memory"});
-				this.$socket.onmessage = msg => {
-					debug("info", "checkConnection -> msg", msg);
-				};
-				clearInterval(checkConnection);
-			}
-		}, 100);
 	}
 };
 </script>
@@ -596,7 +583,7 @@ export default {
 
 						div[class^="server-"]:not(:last-child) {
 							width: 16.66667%;
-							margin: auto;
+							margin: auto 0;
 						}
 
 						.server-name {

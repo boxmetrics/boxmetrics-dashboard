@@ -3,18 +3,179 @@
 		<div class="inner-dashboard">
 			<div class="dashboard-content">
 				<h1>Infos of single server here</h1>
-				<div class="dashboard-section">
-					{{ $route.params.id }}
+				<div class="dashboard-section" v-if="!isLoading">
+					<!-- {{ $route.params.id }} -->
+					<div class="row-1">
+						<div class="inner-content host-infos">
+							<h2>Propriétés</h2>
+						</div>
+						<div class="inner-content memory-cpu-infos">
+							<h2>Mémoire et CPU</h2>
+						</div>
+						<div class="inner-content network-infos">
+							<h2>Réseau</h2>
+						</div>
+					</div>
+
+					<div class="row-2">
+						<div class="inner-content processes-infos">
+							<h2>Processus</h2>
+						</div>
+						<div class="inner-content disks-infos">
+							<h2>Disques</h2>
+							<table class="table table-dashboard">
+								<thead>
+									<tr>
+										<th scope="col">Nom</th>
+										<th scope="col">Total</th>
+										<th scope="col">Disponible</th>
+										<th scope="col">Utilisation (%)</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr
+										v-for="(disk, index) in this.infos
+											.disks"
+										v-bind:key="index"
+									>
+										<td>{{ disk.device }}</td>
+										<td>{{ disk.usage.total }}</td>
+										<td>{{ disk.usage.free }}</td>
+										<td>{{ disk.usage.usedPercent }}</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
 				</div>
+				<Loader
+					v-else
+					:strokeColor="'#2873ed'"
+					:width="'35'"
+					:height="'35'"
+				></Loader>
 			</div>
 		</div>
 	</div>
 </template>
 
 <script>
+// eslint-disable-next-line no-unused-vars
+import {debug, parseToObject, isArraysEqual, server} from "../../../utils";
+import Loader from "@/components/ui/loader";
+
 export default {
-	name: "ServerInfosPage"
+	name: "ServerInfosPage",
+	data() {
+		return {
+			infos: {},
+			isLoading: true
+		};
+	},
+	components: {
+		Loader
+	},
+	methods: {
+		retrieveInfos() {
+			// TODO: implement async/await functions
+			this.$socket.sendObj(server.getCpu());
+			this.$socket.sendObj(server.getMemory());
+			this.$socket.sendObj(server.getDisks());
+			this.$socket.sendObj(server.getUsers());
+			this.$socket.sendObj(server.getHost());
+			this.$socket.sendObj(server.getNetwork());
+			// this.$socket.sendObj(server.getProcesses());
+		}
+	},
+	created() {
+		this.$store.commit("SET_SOCKET_URL", "ws://192.168.1.69:4455/ws/v1");
+
+		const checkInfos = setInterval(() => {
+			const requiredFields = [
+				"cpu",
+				"memory",
+				"disks",
+				"users",
+				"host",
+				"network"
+			];
+			const infosKeys = Object.keys(parseToObject(this.infos));
+			if (isArraysEqual(infosKeys, requiredFields)) {
+				debug(
+					"success",
+					"checkInfos -> !isLoading",
+					isArraysEqual(infosKeys, requiredFields)
+				);
+				this.isLoading = false;
+				clearInterval(checkInfos);
+			}
+		}, 100);
+	},
+	beforeMount() {
+		const initConnection = setInterval(() => {
+			if (this.$store.getters.isConnected === true) {
+				this.retrieveInfos();
+				this.$socket.onmessage = msg => {
+					Object.assign(this.infos, {
+						[`${JSON.parse(msg.data).event.value}`]: JSON.parse(
+							msg.data
+						).data
+					});
+					debug(
+						"info",
+						"data -> this.infos",
+						parseToObject(this.infos)
+					);
+				};
+				clearInterval(initConnection);
+			}
+		}, 100);
+	}
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.dashboard-section {
+	height: 85vh !important;
+
+	.row-1 {
+		height: 45%;
+
+		.inner-content {
+			&:nth-child(1) {
+				width: 20%;
+			}
+			&:nth-child(2) {
+				width: 45%;
+			}
+			&:nth-child(3) {
+				width: 35%;
+			}
+		}
+	}
+	.row-2 {
+		height: 45%;
+		.inner-content {
+			&:nth-child(1) {
+				width: 50%;
+			}
+			&:nth-child(2) {
+				width: 50%;
+			}
+		}
+	}
+	.row-1,
+	.row-2 {
+		display: flex;
+		align-items: center;
+		.inner-content {
+			height: 100%;
+		}
+
+		h2 {
+            font-size: 18px;
+			color: #303133;
+		}
+	}
+}
+</style>

@@ -58,6 +58,12 @@ export default {
 };
 </script>
 <style lang="scss">
+.dashboard-section {
+	height: 75vh !important;
+	.webterminal {
+		height: 100%;
+	}
+}
 .dashboard-header {
 	display: flex;
 	align-items: center;
@@ -95,9 +101,5 @@ export default {
 			}
 		}
 	}
-}
-
-.webterminal {
-	height: 100%;
 }
 </style>

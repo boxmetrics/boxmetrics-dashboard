@@ -49,10 +49,7 @@ const mutations = {
 		state.socket.url = url;
 		Vue.use(VueNativeSock, url, {
 			format: "json",
-			store: store,
-			reconnection: true,
-			reconnectionAttempts: 5000,
-			reconnectionDelay: 300
+			store: store
 		});
 	}
 };
