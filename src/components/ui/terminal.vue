@@ -38,7 +38,6 @@ export default {
 		});
 
 		term.on("paste", (data, ev) => {
-			console.log({data, ev});
 			term.write(data);
 		});
 	}

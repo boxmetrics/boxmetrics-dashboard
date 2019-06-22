@@ -304,7 +304,7 @@ import axios from "axios";
 import Modal from "@/components/partials/Modal";
 import Loader from "@/components/ui/loader";
 import {apiUrl} from "../../../config";
-import {parseToObject} from "../../../utils";
+import {debug, parseToObject} from "../../../utils";
 import {setInterval, clearInterval} from "timers";
 
 export default {
@@ -389,12 +389,10 @@ export default {
 						headers: {"x-access-token": this.token}
 					})
 					.then(response => {
-						// eslint-disable-next-line no-console
-						console.log(response);
+						debug("success", "addServer -> response", response);
 					})
 					.catch(error => {
-						// eslint-disable-next-line no-console
-						console.log(error);
+						debug("error", "addServer -> error", error);
 					});
 
 				setTimeout(() => {
@@ -432,9 +430,7 @@ export default {
 			if (this.$store.getters.isConnected === true) {
 				this.$socket.sendObj({type: "info", value: "memory"});
 				this.$socket.onmessage = msg => {
-					console.log("DEBUG: ----------------------------------");
-					console.log("DEBUG: checkConnection -> msg", msg);
-					console.log("DEBUG: ----------------------------------");
+					debug("info", "checkConnection -> msg", msg);
 				};
 				clearInterval(checkConnection);
 			}
