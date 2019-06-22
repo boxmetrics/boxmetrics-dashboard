@@ -83,7 +83,7 @@ html {
 
 				.dashboard-content {
 					padding: 32px !important;
-					height: 100%;
+					height: 100vh;
 					max-width: 100% !important;
 
 					h1 {
@@ -91,6 +91,12 @@ html {
 						margin-top: 0;
 						margin-bottom: 20px;
 					}
+				}
+
+				.dashboard-section {
+					height: 85vh;
+					overflow-y: scroll;
+					overflow-x: hidden !important;
 				}
 			}
 		}
@@ -167,6 +173,48 @@ html {
 						color: #ff3860;
 					}
 				}
+			}
+		}
+
+		.table thead th {
+			border-bottom-width: 0;
+			border-top-width: 0;
+			color: #858585;
+			vertical-align: bottom;
+		}
+
+		.table th,
+		.table td {
+			padding: 0.75rem;
+			vertical-align: top;
+			border-top: 1px solid rgba(72, 94, 144, 0.16);
+			border-top-width: 1px;
+			border-top-style: solid;
+			border-top-color: rgba(72, 94, 144, 0.16);
+		}
+
+		.table-dashboard {
+			background: #ffffff;
+			font-size: 14px;
+			color: #303133;
+			// border: 1px solid #e5e9f2;
+			box-shadow: 0 2px 4px rgba(3, 27, 78, 0.06);
+			border-radius: 3px;
+			width: 100%;
+		}
+
+		.table-dashboard thead th,
+		.table-dashboard tbody td {
+			text-align: initial;
+
+			&:not(:first-child),
+			&:not(:last-child) {
+				border-color: #e5e9f2;
+				border-top-color: rgb(229, 233, 242);
+				border-right-color: rgb(229, 233, 242);
+				border-bottom-color: rgb(229, 233, 242);
+				border-left-color: rgb(229, 233, 242);
+				white-space: nowrap;
 			}
 		}
 	}

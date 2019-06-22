@@ -4,7 +4,6 @@
 			<div class="dashboard-content">
 				<div class="dashboard-header">
 					<h1>Serveurs</h1>
-					<!-- <button @click="getData()">Get infos</button> -->
 					<ul class="actions">
 						<li>
 							<a
@@ -300,11 +299,12 @@
 </template>
 
 <script>
+/* eslint-disable no-console */
 import axios from "axios";
 import Modal from "@/components/partials/Modal";
 import Loader from "@/components/ui/loader";
 import {apiUrl} from "../../../config";
-import {parseToObject} from "../../../utils";
+import {debug, parseToObject, server} from "../../../utils";
 
 export default {
 	name: "ServersIndexPage",
@@ -387,12 +387,10 @@ export default {
 						headers: {"x-access-token": this.token}
 					})
 					.then(response => {
-						// eslint-disable-next-line no-console
-						console.log(response);
+						debug("success", "addServer -> response", response);
 					})
 					.catch(error => {
-						// eslint-disable-next-line no-console
-						console.log(error);
+						debug("error", "addServer -> error", error);
 					});
 
 				setTimeout(() => {
@@ -423,18 +421,7 @@ export default {
 		},
 		refreshData() {
 			this.fetchData();
-		},
-		getData(dataType) {
-			this.$socket.sendObj({value: "toto"});
-			// this.$socket.sendObj({type: dataType});
 		}
-	},
-	beforeMount() {
-		this.$options.sockets.onmessage = message => {
-			this.socketMessage = message;
-			// eslint-disable-next-line no-console
-			console.log({message});
-		};
 	}
 };
 </script>
@@ -489,11 +476,13 @@ export default {
 							align-items: center;
 							padding: 10px;
 							justify-content: space-between;
-							margin-bottom: 20px;
 							min-height: 70px;
 							background-color: #ffffff;
 							border-radius: 3px;
 							box-shadow: 0 2px 4px rgba(3, 27, 78, 0.06);
+							&:not(:last-child) {
+								margin-bottom: 20px;
+							}
 						}
 
 						span {
@@ -587,6 +576,38 @@ export default {
 											color: #949494;
 											font-size: 16px;
 										}
+									}
+								}
+							}
+						}
+
+						div[class^="server-"]:not(:last-child) {
+							width: 16.66667%;
+							margin: auto 0;
+						}
+
+						.server-name {
+							> p {
+								width: 100px;
+								text-align: center;
+								a {
+									width: 100%;
+									text-align: center;
+									color: #2874ed;
+									background-color: #ecf0f6;
+									font-size: 13px;
+									line-height: 13px;
+									padding: 9px 10px;
+									border-radius: 4px;
+									text-decoration: none;
+									display: inline-flex;
+									-ms-flex-align: center;
+									align-items: center;
+									justify-content: center;
+									transition: opacity 0.3s ease-out;
+
+									&:hover {
+										opacity: 0.7;
 									}
 								}
 							}
