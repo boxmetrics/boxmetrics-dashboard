@@ -4,7 +4,6 @@
 			<div class="dashboard-content">
 				<div class="dashboard-header">
 					<h1>Serveurs</h1>
-					<!-- <button @click="getData()">Get infos</button> -->
 					<ul class="actions">
 						<li>
 							<a
@@ -242,7 +241,9 @@
 											>
 												<router-link
 													:to="
-														`/dashboard/servers/${server._id}/webterminal`
+														`/dashboard/servers/${
+															server._id
+														}/webterminal`
 													"
 												>
 													<i
@@ -254,7 +255,9 @@
 											<li class="submenu-link accounts">
 												<router-link
 													:to="
-														`/dashboard/servers/${server._id}/accounts`
+														`/dashboard/servers/${
+															server._id
+														}/accounts`
 													"
 												>
 													<i
@@ -266,7 +269,9 @@
 											<li class="submenu-link config">
 												<router-link
 													:to="
-														`/dashboard/servers/${server._id}/config`
+														`/dashboard/servers/${
+															server._id
+														}/config`
 													"
 												>
 													<i
@@ -294,11 +299,13 @@
 </template>
 
 <script>
+/* eslint-disable no-console */
 import axios from "axios";
 import Modal from "@/components/partials/Modal";
 import Loader from "@/components/ui/loader";
 import {apiUrl} from "../../../config";
 import {parseToObject} from "../../../utils";
+import {setInterval, clearInterval} from "timers";
 
 export default {
 	name: "ServersIndexPage",
@@ -335,6 +342,7 @@ export default {
 	},
 	created() {
 		window.addEventListener("keyup", this.closeOnEscape);
+		this.$store.commit("SET_SOCKET_URL", "ws://192.168.1.69:4455/ws/v1");
 	},
 	components: {
 		Modal,
@@ -417,19 +425,20 @@ export default {
 		},
 		refreshData() {
 			this.fetchData();
-		},
-		// eslint-disable-next-line no-unused-vars
-		getData(dataType) {
-			this.$socket.sendObj({value: "toto"});
-			// this.$socket.sendObj({type: dataType});
 		}
 	},
 	beforeMount() {
-		this.$options.sockets.onmessage = message => {
-			this.socketMessage = message;
-			// eslint-disable-next-line no-console
-			console.log({message});
-		};
+		const checkConnection = setInterval(() => {
+			if (this.$store.getters.isConnected === true) {
+				this.$socket.sendObj({type: "info", value: "memory"});
+				this.$socket.onmessage = msg => {
+					console.log("DEBUG: ----------------------------------");
+					console.log("DEBUG: checkConnection -> msg", msg);
+					console.log("DEBUG: ----------------------------------");
+				};
+				clearInterval(checkConnection);
+			}
+		}, 100);
 	}
 };
 </script>
