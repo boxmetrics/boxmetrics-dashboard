@@ -11,6 +11,30 @@
 						</div>
 						<div class="inner-content memory-cpu-infos">
 							<h2>Mémoire et CPU</h2>
+							<div>
+								<div class="memory">
+									<span class="section-title"
+										>Mémoire totale:
+										{{ this.infos.memory.total }}</span
+									>
+									<canvas id="memory-chart"></canvas>
+								</div>
+								<div class="cpu">
+									<span class="section-title"
+										>Usage CPU
+									</span>
+									<ul>
+										<div
+											v-for="(item, index) in this.infos
+												.cpu.info"
+											:key="index"
+										>
+											CPU
+											{{ index + 1 + " " + item.percent }}
+										</div>
+									</ul>
+								</div>
+							</div>
 						</div>
 						<div class="inner-content network-infos">
 							<h2>Réseau</h2>
@@ -63,6 +87,7 @@
 // eslint-disable-next-line no-unused-vars
 import {debug, parseToObject, isArraysEqual, server} from "../../../utils";
 import Loader from "@/components/ui/loader";
+import Chart from "chart.js";
 
 export default {
 	name: "ServerInfosPage",
@@ -85,6 +110,48 @@ export default {
 			this.$socket.sendObj(server.getHost());
 			this.$socket.sendObj(server.getNetwork());
 			// this.$socket.sendObj(server.getProcesses());
+		},
+		createChart(chartId, chartData) {
+			const ctx = document.getElementById(chartId);
+			const myChart = new Chart(ctx, {
+				type: chartData.type,
+				data: chartData.data,
+				options: chartData.options
+			});
+		},
+		initChart() {
+			this.createChart("memory-chart", {
+				type: "doughnut",
+				data: {
+					labels: ["Utilisée", "Disponible"],
+					datasets: [
+						{
+							data: [
+								parseToObject(this.infos).memory.used.substring(
+									0,
+									parseToObject(this.infos).memory.used
+										.length - 2
+								),
+								parseToObject(
+									this.infos
+								).memory.available.substring(
+									0,
+									parseToObject(this.infos).memory.available
+										.length - 2
+								)
+							],
+
+							borderColor: ["#2196f38c", "#f443368c"],
+							backgroundColor: ["#2196f38c", "#f443368c"],
+							borderWidth: 1
+						}
+					]
+				},
+				options: {
+					responsive: true,
+					maintainAspectRatio: false
+				}
+			});
 		}
 	},
 	created() {
@@ -107,6 +174,8 @@ export default {
 					isArraysEqual(infosKeys, requiredFields)
 				);
 				this.isLoading = false;
+				this.infos.cpu.info.shift();
+				this.initChart();
 				clearInterval(checkInfos);
 			}
 		}, 100);
@@ -142,11 +211,28 @@ export default {
 		height: 45%;
 
 		.inner-content {
+			ul {
+				padding: 0;
+				margin: 0;
+			}
+			span.section-title {
+				display: block;
+				margin-bottom: 20px;
+			}
 			&:nth-child(1) {
 				width: 20%;
 			}
 			&:nth-child(2) {
 				width: 45%;
+
+				> div {
+					display: flex;
+
+					div:nth-child(1),
+					div:nth-child(2) {
+						width: 50%;
+					}
+				}
 			}
 			&:nth-child(3) {
 				width: 35%;
@@ -173,7 +259,7 @@ export default {
 		}
 
 		h2 {
-            font-size: 18px;
+			font-size: 18px;
 			color: #303133;
 		}
 	}
