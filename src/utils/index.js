@@ -32,7 +32,6 @@ export const debug = (type, title, message) => {
 			break;
 		case "info":
 			Object.assign(styleOptions, {background: "#2196F3"});
-
 			break;
 		case "error":
 			Object.assign(styleOptions, {background: "#F44336"});
