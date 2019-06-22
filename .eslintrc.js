@@ -44,7 +44,8 @@ module.exports = {
 			{
 				vars: "all",
 				args: "all",
-				argsIgnorePattern: "res|^err|state|dispatch|event|context"
+				argsIgnorePattern:
+					"res|^err|state|dispatch|reject|event|context"
 			}
 		],
 		"no-param-reassign": [
