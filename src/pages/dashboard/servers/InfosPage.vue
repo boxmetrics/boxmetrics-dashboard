@@ -13,8 +13,11 @@
 							<h2>Mémoire et CPU</h2>
 							<div>
 								<div class="memory">
-									<span class="section-title"
-										>Mémoire totale:
+									<span
+										class="section-title"
+										v-if="this.infos.memory"
+									>
+										Mémoire totale:
 										{{ this.infos.memory.total }}</span
 									>
 									<canvas id="memory-chart"></canvas>
@@ -23,7 +26,12 @@
 									<span class="section-title"
 										>Usage CPU
 									</span>
-									<ul>
+									<ul
+										v-if="
+											this.infos.cpu &&
+												this.infos.cpu.info
+										"
+									>
 										<div
 											v-for="(item, index) in this.infos
 												.cpu.info"
@@ -88,6 +96,8 @@
 import {debug, parseToObject, isArraysEqual, server} from "../../../utils";
 import Loader from "@/components/ui/loader";
 import Chart from "chart.js";
+import axios from "axios";
+import {apiUrl} from "../../../config";
 
 export default {
 	name: "ServerInfosPage",
@@ -99,6 +109,22 @@ export default {
 	},
 	components: {
 		Loader
+	},
+	mounted() {
+		debug(
+			"info",
+			"mounted -> this.$route.params.id",
+			this.$route.params.id
+		);
+		if (
+			this.$store.getters.getToken === undefined ||
+			this.$store.getters.getToken === ""
+		) {
+			return;
+		}
+		this.token = this.$store.getters.getToken;
+		this.currentUserId = this.$store.getters.getUserId;
+		this.fetchData(this.$route.params.id);
 	},
 	methods: {
 		retrieveInfos() {
@@ -112,12 +138,19 @@ export default {
 			// this.$socket.sendObj(server.getProcesses());
 		},
 		createChart(chartId, chartData) {
-			const ctx = document.getElementById(chartId);
-			const myChart = new Chart(ctx, {
-				type: chartData.type,
-				data: chartData.data,
-				options: chartData.options
-			});
+			const checkCtx = setInterval(() => {
+				const ctx = document.getElementById(chartId);
+				if (ctx !== null) {
+					debug("success", "checkCtx -> ctx - available", ctx);
+					// eslint-disable-next-line no-unused-vars
+					const myChart = new Chart(ctx, {
+						type: chartData.type,
+						data: chartData.data,
+						options: chartData.options
+					});
+					clearInterval(checkCtx);
+				}
+			}, 100);
 		},
 		initChart() {
 			this.createChart("memory-chart", {
@@ -152,11 +185,25 @@ export default {
 					maintainAspectRatio: false
 				}
 			});
+		},
+		fetchData(serverId) {
+			axios
+				.get(`${apiUrl}servers/${serverId}`, {
+					headers: {
+						"x-access-token": this.token
+					}
+				})
+				.then(response => {
+					debug("info", "fetchData -> response", response.data);
+					// this.isLoading = false;
+				});
+		},
+		refreshData() {
+			this.fetchData();
 		}
 	},
 	created() {
 		this.$store.commit("SET_SOCKET_URL", "ws://192.168.1.69:4455/ws/v1");
-
 		const checkInfos = setInterval(() => {
 			const requiredFields = [
 				"cpu",

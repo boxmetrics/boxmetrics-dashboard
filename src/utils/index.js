@@ -1,3 +1,5 @@
+import {env} from "../config";
+
 export const splitCamelCase = value => {
 	return value
 		.replace(/([a-z])([A-Z])/g, "$1 $2")
@@ -18,7 +20,7 @@ export const objectToCssString = obj => {
 };
 
 export const debug = (type, title, message) => {
-	if (!message) {
+	if (!message || env !== "development") {
 		return;
 	}
 	const styleOptions = {

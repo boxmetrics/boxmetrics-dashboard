@@ -3,5 +3,6 @@ if (process.env.NODE_ENV !== "production") {
 }
 
 module.exports = {
-	apiUrl: process.env.VUE_APP_API_URL
+	apiUrl: process.env.VUE_APP_API_URL,
+	env: process.env.NODE_ENV
 };
