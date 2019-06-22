@@ -242,9 +242,7 @@
 											>
 												<router-link
 													:to="
-														`/dashboard/servers/${
-															server._id
-														}/webterminal`
+														`/dashboard/servers/${server._id}/webterminal`
 													"
 												>
 													<i
@@ -256,9 +254,7 @@
 											<li class="submenu-link accounts">
 												<router-link
 													:to="
-														`/dashboard/servers/${
-															server._id
-														}/accounts`
+														`/dashboard/servers/${server._id}/accounts`
 													"
 												>
 													<i
@@ -270,9 +266,7 @@
 											<li class="submenu-link config">
 												<router-link
 													:to="
-														`/dashboard/servers/${
-															server._id
-														}/config`
+														`/dashboard/servers/${server._id}/config`
 													"
 												>
 													<i
@@ -424,6 +418,7 @@ export default {
 		refreshData() {
 			this.fetchData();
 		},
+		// eslint-disable-next-line no-unused-vars
 		getData(dataType) {
 			this.$socket.sendObj({value: "toto"});
 			// this.$socket.sendObj({type: dataType});
@@ -489,11 +484,13 @@ export default {
 							align-items: center;
 							padding: 10px;
 							justify-content: space-between;
-							margin-bottom: 20px;
 							min-height: 70px;
 							background-color: #ffffff;
 							border-radius: 3px;
 							box-shadow: 0 2px 4px rgba(3, 27, 78, 0.06);
+							&:not(:last-child) {
+								margin-bottom: 20px;
+							}
 						}
 
 						span {
@@ -587,6 +584,38 @@ export default {
 											color: #949494;
 											font-size: 16px;
 										}
+									}
+								}
+							}
+						}
+
+						div[class^="server-"]:not(:last-child) {
+							width: 16.66667%;
+							margin: auto;
+						}
+
+						.server-name {
+							> p {
+								width: 100px;
+								text-align: center;
+								a {
+									width: 100%;
+									text-align: center;
+									color: #2874ed;
+									background-color: #ecf0f6;
+									font-size: 13px;
+									line-height: 13px;
+									padding: 9px 10px;
+									border-radius: 4px;
+									text-decoration: none;
+									display: inline-flex;
+									-ms-flex-align: center;
+									align-items: center;
+									justify-content: center;
+									transition: opacity 0.3s ease-out;
+
+									&:hover {
+										opacity: 0.7;
 									}
 								}
 							}
