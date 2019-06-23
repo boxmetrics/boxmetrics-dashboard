@@ -6,7 +6,9 @@
 				this.currentRoute.startsWith('/dashboard/servers')
 			"
 		></Sidebar>
-		<router-view />
+		<keep-alive>
+			<router-view />
+		</keep-alive>
 	</div>
 </template>
 <script>

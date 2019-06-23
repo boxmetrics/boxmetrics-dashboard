@@ -2,6 +2,14 @@
 	<div id="terminal"></div>
 </template>
 <script>
+/* eslint-disable no-unused-vars */
+import {
+	debug,
+	parseToObject,
+	isArraysEqual,
+	server,
+	buildCommand
+} from "../../utils";
 import * as fit from "xterm/lib/addons/fit/fit";
 import {Terminal} from "xterm";
 Terminal.applyAddon(fit);
@@ -9,9 +17,16 @@ const term = new Terminal({
 	cursorBlink: true,
 	theme: {fontFamily: "Source Code Pro"}
 });
-
 export default {
 	name: "terminal",
+
+	data() {
+		return {
+			infos: {},
+			currentBuffer: [],
+			response: ""
+		};
+	},
 	mounted() {
 		term.open(document.getElementById("terminal"));
 		term.fit();
@@ -20,14 +35,19 @@ export default {
 		term.prompt = () => {
 			term.write("\r\n" + shellprompt);
 		};
+		term.writeln("boxmetrics webterminal");
 		term.prompt();
 
 		term.on("key", (key, ev) => {
 			const printable =
 				!ev.altKey && !ev.altGraphKey && !ev.ctrlKey && !ev.metaKey;
-			if (ev.keyCode == 13) {
-				term.prompt();
-			} else if (ev.keyCode == 8) {
+			if (ev.keyCode !== 8 && ev.keyCode !== 13) {
+				this.currentBuffer.push(key);
+			}
+			if (ev.keyCode === 13) {
+				this.executeCommand();
+			} else if (ev.keyCode === 8) {
+				this.currentBuffer.pop();
 				if (term.buffer._buffer.x > 2) {
 					term.write("\b \b");
 				}
@@ -43,7 +63,59 @@ export default {
 	methods: {
 		clear() {
 			term.clear();
+		},
+		runCommand(command, args) {
+			debug("info", "object to send", {
+				type: "command",
+				value: command,
+				options: {
+					args: args.map(arg => {
+						return `-${arg}`;
+					})
+				}
+			});
+			this.$socket.sendObj({
+				type: "command",
+				value: command,
+				options: {
+					args: args.map(arg => {
+						return `-${arg}`;
+					})
+				}
+			});
+		},
+		executeCommand() {
+			term.prompt();
+			if (parseToObject(this.currentBuffer).length === 0) {
+				return;
+			}
+			this.runCommand(
+				buildCommand(this.currentBuffer).command,
+				buildCommand(this.currentBuffer).args
+			);
+			const awaitForResponse = setInterval(() => {
+				if (this.response) {
+					term.write(this.response);
+					term.prompt();
+					this.currentBuffer = [];
+					this.response = "";
+					clearInterval(awaitForResponse);
+				}
+			}, 100);
 		}
+	},
+	beforeMount() {
+		const initConnection = setInterval(() => {
+			if (this.$store.getters.isConnected === true) {
+				this.$socket.onmessage = msg => {
+					debug("info", "data -> msg", JSON.parse(msg.data).data);
+					this.response = JSON.parse(msg.data).data
+						? JSON.parse(msg.data).data.replace(/(\r\n|\n)/gm, "  ")
+						: "error on command execution";
+				};
+				clearInterval(initConnection);
+			}
+		}, 100);
 	}
 };
 </script>

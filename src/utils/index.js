@@ -92,5 +92,18 @@ export const server = {
 	getProcess(pid) {
 		return {type: "info", value: {options: {pid}}};
 	},
-	runCommand(command) {}
+	runCommand(command, args) {
+		return {type: "command", value: command, options: {args}};
+	}
+};
+
+export const buildCommand = obj => {
+	const splittedObj = obj.join("").split("-");
+	const command = splittedObj[0].trim();
+	const args = splittedObj.length > 1 ? splittedObj.slice(1) : [];
+
+	return {
+		command,
+		args
+	};
 };

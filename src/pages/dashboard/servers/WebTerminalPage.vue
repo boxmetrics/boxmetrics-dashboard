@@ -20,7 +20,7 @@
 					</ul>
 				</div>
 				<div class="dashboard-section">
-					<div class="webterminal" v-if="!isLoading">
+					<div id="webterminal" class="webterminal" v-if="!isLoading">
 						<Terminal ref="terminal"></Terminal>
 					</div>
 
@@ -37,27 +37,64 @@
 </template>
 
 <script>
+import {debug, parseToObject, isArraysEqual, server} from "../../../utils";
 import Terminal from "@/components/ui/terminal";
 import Loader from "@/components/ui/loader";
+import axios from "axios";
+import {apiUrl} from "../../../config";
+
 export default {
 	name: "ServerWebTerminalPage",
 	data() {
 		return {
-			isLoading: true
+			isLoading: true,
+			server: {}
 		};
 	},
 	components: {
 		Loader,
 		Terminal
 	},
-	mounted() {
-		setTimeout(() => {
-			this.isLoading = false;
-		}, 1000);
+	created() {
+		debug("info", "created -> this.dataServer", this.dataServer);
+		if (this.dataServer) {
+			this.server = this.dataServer;
+			debug("info", "created -> this.server", this.server);
+			this.setSockets();
+		} else {
+			if (
+				this.$store.getters.getToken === undefined ||
+				this.$store.getters.getToken === ""
+			) {
+				return;
+			}
+			this.token = this.$store.getters.getToken;
+			this.currentUserId = this.$store.getters.getUserId;
+			this.fetchData(this.$route.params.id);
+		}
 	},
 	methods: {
 		clear() {
 			this.$refs.terminal.clear();
+		},
+		fetchData(serverId) {
+			axios
+				.get(`${apiUrl}servers/${serverId}`, {
+					headers: {
+						"x-access-token": this.token
+					}
+				})
+				.then(response => {
+					debug("info", "fetchData -> response", response.data);
+					this.server = response.data;
+					this.setSockets();
+					this.isLoading = false;
+				});
+		},
+		setSockets() {
+			const host = parseToObject(this.server).host;
+			const port = parseToObject(this.server).port;
+			this.$store.commit("SET_SOCKET_URL", `ws://${host}:${port}/ws/v1`);
 		}
 	}
 };
