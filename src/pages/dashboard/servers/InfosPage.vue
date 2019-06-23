@@ -292,8 +292,9 @@ export default {
 					]
 				},
 				options: {
-					responsive: true,
-					maintainAspectRatio: false
+					responsive: false,
+                    maintainAspectRatio: true,
+                    aspectRatio: 2
 				}
 			});
 		},
