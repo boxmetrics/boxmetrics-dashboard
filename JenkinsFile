@@ -37,7 +37,7 @@ pipeline {
       sh "docker push ${SERVER}/boxmetrics-front:${env.BRANCH_NAME}-build-${env.BUILD_NUMBER}"
       sh 'docker ps'
       sh 'docker stop boxmetrics-front-dev || true'
-      sh 'docker rm boxmetrics-front-dev'
+      sh 'docker rm boxmetrics-front-dev || true'
       sh "docker run -d -p 8080:8080 --env-file /srv/boxmetrics/front/.env --name boxmetrics-front-dev ${SERVER}/boxmetrics-front:${env.BRANCH_NAME}-build-${env.BUILD_NUMBER}"
      }
     }
@@ -57,7 +57,7 @@ pipeline {
        sh "docker push ${SERVER}:${env.BRANCH_NAME}-build-${env.BUILD_NUMBER}"
        sh 'ssh prod-boxmetrics docker ps'
        sh 'ssh prod-boxmetrics docker stop boxmetrics-front-prod || true'
-       sh 'ssh prod-boxmetrics docker rm boxmetrics-front-dev'
+       sh 'ssh prod-boxmetrics docker rm boxmetrics-front-prod || true'
        sh "ssh prod-boxmetrics docker run -d -p 8080:8080 --env-file /srv/boxmetrics/front/.env --name boxmetrics-front-prod ${REGISTRY}/boxmetrics-front:${env.BRANCH_NAME}-build-${env.BUILD_NUMBER}"
       }
      }
