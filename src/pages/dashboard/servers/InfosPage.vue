@@ -110,9 +110,11 @@
 											<td>
 												{{
 													$moment(
-														process.createTime.replace(
-															/CEST$/gm,
-															""
+														Date.parse(
+															process.createTime.replace(
+																/CEST$/gm,
+																""
+															)
 														)
 													).fromNow(true)
 												}}
@@ -216,6 +218,51 @@ export default {
 				}
 			}, 100);
 		},
+		setSockets() {
+			const host = parseToObject(this.server).host;
+			const port = parseToObject(this.server).port;
+			this.$store.commit("SET_SOCKET_URL", `ws://${host}:${port}/ws/v1`);
+			const checkInfos = setInterval(() => {
+				const requiredFields = [
+					"cpu",
+					"memory",
+					"disks",
+					"users",
+					"host",
+					"network",
+					"processes"
+				];
+				const infosKeys = Object.keys(parseToObject(this.infos));
+				if (isArraysEqual(infosKeys, requiredFields)) {
+					debug(
+						"success",
+						"checkInfos -> !isLoading",
+						isArraysEqual(infosKeys, requiredFields)
+					);
+					this.infos.cpu.info.shift();
+					this.infos.processes.length = 50;
+					const allowed = [
+						"hostname",
+						"kernelVersion",
+						"os",
+						"platform",
+						"platformVersion",
+						"uptime"
+					];
+					this.infos.host = Object.keys(this.infos.host)
+						.filter(key => {
+							return allowed.includes(key);
+						})
+						.reduce((obj, key) => {
+							obj[key] = this.infos.host[key];
+							return obj;
+						}, {});
+					this.initChart();
+					this.isLoading = false;
+					clearInterval(checkInfos);
+				}
+			}, 100);
+		},
 		initChart() {
 			this.createChart("memory-chart", {
 				type: "doughnut",
@@ -260,17 +307,19 @@ export default {
 				.then(response => {
 					debug("info", "fetchData -> response", response.data);
 					this.server = response.data;
-					// this.isLoading = false;
+					this.setSockets();
 				});
 		},
 		refreshData() {
 			this.fetchData();
 		}
 	},
-	mounted() {
+	created() {
+		debug("info", "created -> this.dataServer", this.dataServer);
 		if (this.dataServer) {
 			this.server = this.dataServer;
-			debug("info", "mounted -> this.server", this.server);
+			debug("info", "created -> this.server", this.server);
+			this.setSockets();
 		} else {
 			if (
 				this.$store.getters.getToken === undefined ||
@@ -282,50 +331,6 @@ export default {
 			this.currentUserId = this.$store.getters.getUserId;
 			this.fetchData(this.$route.params.id);
 		}
-	},
-	created() {
-		debug("info", "created -> this.dataServer", this.dataServer);
-		this.$store.commit("SET_SOCKET_URL", "ws://154.49.211.237:4455/ws/v1");
-		const checkInfos = setInterval(() => {
-			const requiredFields = [
-				"cpu",
-				"memory",
-				"disks",
-				"users",
-				"host",
-				"network",
-				"processes"
-			];
-			const infosKeys = Object.keys(parseToObject(this.infos));
-			if (isArraysEqual(infosKeys, requiredFields)) {
-				debug(
-					"success",
-					"checkInfos -> !isLoading",
-					isArraysEqual(infosKeys, requiredFields)
-				);
-				this.isLoading = false;
-				this.infos.cpu.info.shift();
-				this.infos.processes.length = 50;
-				const allowed = [
-					"hostname",
-					"kernelVersion",
-					"os",
-					"platform",
-					"platformVersion",
-					"uptime"
-				];
-				this.infos.host = Object.keys(this.infos.host)
-					.filter(key => {
-						return allowed.includes(key);
-					})
-					.reduce((obj, key) => {
-						obj[key] = this.infos.host[key];
-						return obj;
-					}, {});
-				this.initChart();
-				clearInterval(checkInfos);
-			}
-		}, 100);
 	},
 	beforeMount() {
 		const initConnection = setInterval(() => {
