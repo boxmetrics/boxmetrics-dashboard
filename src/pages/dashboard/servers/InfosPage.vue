@@ -1,17 +1,75 @@
 <template>
 	<div class="dashboard">
 		<div class="inner-dashboard">
-			<div class="dashboard-content">
-				<h1>Infos of single server here</h1>
-				<div class="dashboard-section" v-if="!isLoading">
-					<!-- {{ $route.params.id }} -->
+			<div class="dashboard-content" v-if="!isLoading">
+				<h1>Détails de {{ this.server.name }}</h1>
+				<div class="dashboard-section">
 					<div class="row-1">
 						<div class="inner-content host-infos">
 							<h2>Propriétés</h2>
+							<div v-if="this.infos && this.infos.host">
+								<table
+									class="table table-dashboard"
+									style="width:100%;"
+								>
+									<tbody>
+										<tr
+											v-for="(item, index) in this.infos
+												.host"
+											:key="index"
+										>
+											<td
+												class="table-title"
+												style="width:200px;"
+											>
+												{{ index }}
+											</td>
+											<td>
+												<span>{{ item }}</span>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
 						</div>
 						<div class="inner-content memory-cpu-infos">
 							<h2>Mémoire et CPU</h2>
 							<div>
+								<div
+									class="cpu"
+									v-if="this.infos.cpu && this.infos.cpu.info"
+								>
+									<span class="section-title"
+										>Usage CPU:
+										{{ this.infos.cpu.info.length }} cores
+									</span>
+									<ul>
+										<table
+											class="table table-dashboard"
+											style="width:100%;"
+										>
+											<tbody>
+												<tr
+													v-for="(item, index) in this
+														.infos.cpu.info"
+													:key="index"
+												>
+													<td
+														class="table-title"
+														style="width:200px;"
+													>
+														CPU {{ index + 1 }}
+													</td>
+													<td>
+														<span>{{
+															item.percent
+														}}</span>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</ul>
+								</div>
 								<div class="memory">
 									<span
 										class="section-title"
@@ -22,71 +80,89 @@
 									>
 									<canvas id="memory-chart"></canvas>
 								</div>
-								<div class="cpu">
-									<span class="section-title"
-										>Usage CPU
-									</span>
-									<ul
-										v-if="
-											this.infos.cpu &&
-												this.infos.cpu.info
-										"
-									>
-										<div
-											v-for="(item, index) in this.infos
-												.cpu.info"
-											:key="index"
-										>
-											CPU
-											{{ index + 1 + " " + item.percent }}
-										</div>
-									</ul>
-								</div>
 							</div>
-						</div>
-						<div class="inner-content network-infos">
-							<h2>Réseau</h2>
 						</div>
 					</div>
 
 					<div class="row-2">
 						<div class="inner-content processes-infos">
 							<h2>Processus</h2>
+							<div>
+								<table class="table table-dashboard">
+									<thead>
+										<tr>
+											<th scope="col">Nom</th>
+											<th scope="col">Utilisateur</th>
+											<th scope="col">PID</th>
+											<th scope="col">Lancé il y a</th>
+											<th scope="col">Temps CPU</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr
+											v-for="(process, index) in this
+												.infos.processes"
+											v-bind:key="index"
+										>
+											<td>{{ process.name }}</td>
+											<td>{{ process.username }}</td>
+											<td>{{ process.pid }}</td>
+											<td>
+												{{
+													$moment(
+														process.createTime.replace(
+															/CEST$/gm,
+															""
+														)
+													).fromNow(true)
+												}}
+											</td>
+											<td>
+												{{ process.cpu.times.system }}
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
 						</div>
 						<div class="inner-content disks-infos">
 							<h2>Disques</h2>
-							<table class="table table-dashboard">
-								<thead>
-									<tr>
-										<th scope="col">Nom</th>
-										<th scope="col">Total</th>
-										<th scope="col">Disponible</th>
-										<th scope="col">Utilisation (%)</th>
-									</tr>
-								</thead>
-								<tbody>
-									<tr
-										v-for="(disk, index) in this.infos
-											.disks"
-										v-bind:key="index"
-									>
-										<td>{{ disk.device }}</td>
-										<td>{{ disk.usage.total }}</td>
-										<td>{{ disk.usage.free }}</td>
-										<td>{{ disk.usage.usedPercent }}</td>
-									</tr>
-								</tbody>
-							</table>
+							<div>
+								<table class="table table-dashboard">
+									<thead>
+										<tr>
+											<th scope="col">Nom</th>
+											<th scope="col">Total</th>
+											<th scope="col">Disponible</th>
+											<th scope="col">Utilisation (%)</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr
+											v-for="(disk, index) in this.infos
+												.disks"
+											v-bind:key="index"
+										>
+											<td>{{ disk.device }}</td>
+											<td>{{ disk.usage.total }}</td>
+											<td>{{ disk.usage.free }}</td>
+											<td>
+												{{ disk.usage.usedPercent }}
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
 						</div>
 					</div>
 				</div>
-				<Loader
-					v-else
-					:strokeColor="'#2873ed'"
-					:width="'35'"
-					:height="'35'"
-				></Loader>
 			</div>
+			<Loader
+				v-else
+				:strokeColor="'#2873ed'"
+				:width="'35'"
+				:height="'35'"
+			></Loader>
 		</div>
 	</div>
 </template>
@@ -101,30 +177,18 @@ import {apiUrl} from "../../../config";
 
 export default {
 	name: "ServerInfosPage",
+	props: {
+		dataServer: Object
+	},
 	data() {
 		return {
+			server: {},
 			infos: {},
 			isLoading: true
 		};
 	},
 	components: {
 		Loader
-	},
-	mounted() {
-		debug(
-			"info",
-			"mounted -> this.$route.params.id",
-			this.$route.params.id
-		);
-		if (
-			this.$store.getters.getToken === undefined ||
-			this.$store.getters.getToken === ""
-		) {
-			return;
-		}
-		this.token = this.$store.getters.getToken;
-		this.currentUserId = this.$store.getters.getUserId;
-		this.fetchData(this.$route.params.id);
 	},
 	methods: {
 		retrieveInfos() {
@@ -135,7 +199,7 @@ export default {
 			this.$socket.sendObj(server.getUsers());
 			this.$socket.sendObj(server.getHost());
 			this.$socket.sendObj(server.getNetwork());
-			// this.$socket.sendObj(server.getProcesses());
+			this.$socket.sendObj(server.getProcesses());
 		},
 		createChart(chartId, chartData) {
 			const checkCtx = setInterval(() => {
@@ -195,6 +259,7 @@ export default {
 				})
 				.then(response => {
 					debug("info", "fetchData -> response", response.data);
+					this.server = response.data;
 					// this.isLoading = false;
 				});
 		},
@@ -202,8 +267,25 @@ export default {
 			this.fetchData();
 		}
 	},
+	mounted() {
+		if (this.dataServer) {
+			this.server = this.dataServer;
+			debug("info", "mounted -> this.server", this.server);
+		} else {
+			if (
+				this.$store.getters.getToken === undefined ||
+				this.$store.getters.getToken === ""
+			) {
+				return;
+			}
+			this.token = this.$store.getters.getToken;
+			this.currentUserId = this.$store.getters.getUserId;
+			this.fetchData(this.$route.params.id);
+		}
+	},
 	created() {
-		this.$store.commit("SET_SOCKET_URL", "ws://192.168.1.69:4455/ws/v1");
+		debug("info", "created -> this.dataServer", this.dataServer);
+		this.$store.commit("SET_SOCKET_URL", "ws://154.49.211.237:4455/ws/v1");
 		const checkInfos = setInterval(() => {
 			const requiredFields = [
 				"cpu",
@@ -211,7 +293,8 @@ export default {
 				"disks",
 				"users",
 				"host",
-				"network"
+				"network",
+				"processes"
 			];
 			const infosKeys = Object.keys(parseToObject(this.infos));
 			if (isArraysEqual(infosKeys, requiredFields)) {
@@ -222,6 +305,23 @@ export default {
 				);
 				this.isLoading = false;
 				this.infos.cpu.info.shift();
+				this.infos.processes.length = 50;
+				const allowed = [
+					"hostname",
+					"kernelVersion",
+					"os",
+					"platform",
+					"platformVersion",
+					"uptime"
+				];
+				this.infos.host = Object.keys(this.infos.host)
+					.filter(key => {
+						return allowed.includes(key);
+					})
+					.reduce((obj, key) => {
+						obj[key] = this.infos.host[key];
+						return obj;
+					}, {});
 				this.initChart();
 				clearInterval(checkInfos);
 			}
@@ -256,8 +356,22 @@ export default {
 
 	.row-1 {
 		height: 45%;
+		margin-bottom: 40px;
 
 		.inner-content {
+			.table {
+				tbody {
+					tr:first-child {
+						> td {
+							border-top-width: 0;
+						}
+					}
+				}
+				.table-title {
+					font-weight: bold;
+					color: #858585;
+				}
+			}
 			ul {
 				padding: 0;
 				margin: 0;
@@ -267,10 +381,11 @@ export default {
 				margin-bottom: 20px;
 			}
 			&:nth-child(1) {
-				width: 20%;
+				width: 40%;
 			}
 			&:nth-child(2) {
-				width: 45%;
+				padding-left: 20px;
+				width: 60%;
 
 				> div {
 					display: flex;
@@ -281,19 +396,21 @@ export default {
 					}
 				}
 			}
-			&:nth-child(3) {
-				width: 35%;
-			}
+			// &:nth-child(3) {
+			// 	width: 35%;
+			// }
 		}
 	}
 	.row-2 {
 		height: 45%;
 		.inner-content {
 			&:nth-child(1) {
-				width: 50%;
+				padding-right: 20px;
+				width: 60%;
 			}
 			&:nth-child(2) {
-				width: 50%;
+				padding-left: 20px;
+				width: 40%;
 			}
 		}
 	}

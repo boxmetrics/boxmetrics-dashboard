@@ -12,7 +12,7 @@
 
 					<ul class="actions" v-if="!isLoading">
 						<li>
-							<a class="btn clear" @click.prevent="showModal">
+							<a class="btn clear" @click.prevent="clear">
 								<i class="icon ion-ios-close"></i>Effacer
 								l'historique
 							</a>
@@ -21,7 +21,7 @@
 				</div>
 				<div class="dashboard-section">
 					<div class="webterminal" v-if="!isLoading">
-						<Terminal></Terminal>
+						<Terminal ref="terminal"></Terminal>
 					</div>
 
 					<Loader
@@ -54,6 +54,11 @@ export default {
 		setTimeout(() => {
 			this.isLoading = false;
 		}, 1000);
+	},
+	methods: {
+		clear() {
+			this.$refs.terminal.clear();
+		}
 	}
 };
 </script>

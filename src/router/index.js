@@ -1,10 +1,11 @@
 import Vue from "vue";
 import Router from "vue-router";
-import ProfilePage from "@/pages/ProfilePage";
+
 import LoginPage from "@/pages/auth/LoginPage";
 import RegisterPage from "@/pages/auth/RegisterPage";
 import ForgotPassPage from "@/pages/auth/ForgotPassPage";
 import DashIndexPage from "@/pages/dashboard/IndexPage";
+import ProfilePage from "@/pages/dashboard/ProfilePage";
 import ServersIndexPage from "@/pages/dashboard/servers/IndexPage";
 import ServerAccountsPage from "@/pages/dashboard/servers/AccountsPage";
 import ServerConfigPage from "@/pages/dashboard/servers/ConfigPage";
@@ -18,14 +19,6 @@ const router = new Router({
 	mode: "history",
 	routes: [
 		{path: "/", redirect: "/dashboard"},
-		{
-			path: "/profile",
-			name: "ProfilePage",
-			component: ProfilePage,
-			meta: {
-				title: "boxmetrics - Mon profil"
-			}
-		},
 		{
 			path: "/auth/login",
 			name: "LoginPage",
@@ -60,6 +53,14 @@ const router = new Router({
 			}
 		},
 		{
+			path: "/dashboard/profile",
+			name: "ProfilePage",
+			component: ProfilePage,
+			meta: {
+				title: "boxmetrics - Mon profil"
+			}
+		},
+		{
 			path: "/dashboard/servers",
 			name: "Servers",
 			component: ServersIndexPage,
@@ -71,6 +72,7 @@ const router = new Router({
 			path: "/dashboard/servers/:id",
 			name: "ServerInfos",
 			component: ServerInfosPage,
+			props: true,
 			meta: {
 				title: "boxmetrics - Serveurs"
 			}

@@ -4,16 +4,15 @@
 <script>
 import * as fit from "xterm/lib/addons/fit/fit";
 import {Terminal} from "xterm";
+Terminal.applyAddon(fit);
+const term = new Terminal({
+	cursorBlink: true,
+	theme: {fontFamily: "Source Code Pro"}
+});
 
 export default {
 	name: "terminal",
 	mounted() {
-		Terminal.applyAddon(fit);
-		const term = new Terminal({
-			cursorBlink: true,
-			theme: {fontFamily: "Source Code Pro"}
-		});
-
 		term.open(document.getElementById("terminal"));
 		term.fit();
 		const shellprompt = "$ ";
@@ -40,6 +39,11 @@ export default {
 		term.on("paste", (data, ev) => {
 			term.write(data);
 		});
+	},
+	methods: {
+		clear() {
+			term.clear();
+		}
 	}
 };
 </script>

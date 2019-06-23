@@ -1,6 +1,11 @@
 <template>
 	<div id="app">
-		<Sidebar v-if="hasSidebar"></Sidebar>
+		<Sidebar
+			v-if="hasSidebar"
+			:is-server-link-active="
+				this.currentRoute.startsWith('/dashboard/servers')
+			"
+		></Sidebar>
 		<router-view />
 	</div>
 </template>
@@ -23,6 +28,7 @@ export default {
 		},
 		hasSidebar() {
 			let b = true;
+
 			if (
 				this.currentRoute === "/" ||
 				JSON.parse(JSON.stringify(this.excludedRoutes)).some(elem => {

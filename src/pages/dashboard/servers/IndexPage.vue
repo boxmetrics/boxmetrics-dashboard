@@ -185,7 +185,13 @@
 								</span>
 								<p>
 									<router-link
-										:to="`/dashboard/servers/${server._id}`"
+										:to="{
+											name: 'ServerInfos',
+											params: {
+												id: server._id,
+												dataServer: server
+											}
+										}"
 									>
 										{{ server.name }}
 									</router-link>
@@ -241,9 +247,7 @@
 											>
 												<router-link
 													:to="
-														`/dashboard/servers/${
-															server._id
-														}/webterminal`
+														`/dashboard/servers/${server._id}/webterminal`
 													"
 												>
 													<i
@@ -255,9 +259,7 @@
 											<li class="submenu-link accounts">
 												<router-link
 													:to="
-														`/dashboard/servers/${
-															server._id
-														}/accounts`
+														`/dashboard/servers/${server._id}/accounts`
 													"
 												>
 													<i
@@ -269,9 +271,7 @@
 											<li class="submenu-link config">
 												<router-link
 													:to="
-														`/dashboard/servers/${
-															server._id
-														}/config`
+														`/dashboard/servers/${server._id}/config`
 													"
 												>
 													<i
@@ -341,6 +341,7 @@ export default {
 	},
 	created() {
 		window.addEventListener("keyup", this.closeOnEscape);
+		this.$store.commit("SET_SOCKET_URL", "ws://154.49.211.237:4455/ws/v1");
 	},
 	components: {
 		Modal,
@@ -415,6 +416,11 @@ export default {
 					}
 				})
 				.then(response => {
+					debug(
+						"info",
+						"fetchData -> response",
+						parseToObject(response.data).servers
+					);
 					this.servers = response.data.servers;
 					this.isLoading = false;
 				});
@@ -422,6 +428,20 @@ export default {
 		refreshData() {
 			this.fetchData();
 		}
+	},
+	beforeMount() {
+		const initConnection = setInterval(() => {
+			if (this.$store.getters.isConnected === true) {
+				this.$socket.onmessage = msg => {
+					debug(
+						"info",
+						"initConnection -> msg",
+						parseToObject(msg.data)
+					);
+				};
+				clearInterval(initConnection);
+			}
+		}, 100);
 	}
 };
 </script>

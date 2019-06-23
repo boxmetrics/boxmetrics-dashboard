@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div class="loader-container">
 		<span class="loader">
 			<svg
 				:width="width"
