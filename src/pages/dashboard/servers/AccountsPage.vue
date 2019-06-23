@@ -1,12 +1,48 @@
 <template>
 	<div class="dashboard">
 		<div class="inner-dashboard">
-			<div class="dashboard-content">
-				<h1>List of available accounst here</h1>
+			<div class="dashboard-content" v-if="!isLoading">
+				<h1>Utilisateurs du serveur</h1>
 				<div class="dashboard-section">
-					{{ $route.params.id }}
+					<div>
+						<table class="table table-dashboard">
+							<thead>
+								<tr>
+									<th scope="col">Utilisateur</th>
+									<th scope="col">IP</th>
+									<th scope="col">Terminal</th>
+									<th scope="col">Disponible depuis</th>
+									<th scope="col">Actions</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr
+									v-for="(item, index) in this.infos.users"
+									v-bind:key="index"
+								>
+									<td>{{ item.user }}</td>
+									<td>{{ item.host }}</td>
+									<td>{{ item.terminal }}</td>
+									<td>
+										{{
+											$moment(
+												new Date(item.started * 1000)
+											).fromNow(true)
+										}}
+									</td>
+									<td>actions</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
 				</div>
 			</div>
+			<Loader
+				v-else
+				:strokeColor="'#2873ed'"
+				:width="'35'"
+				:height="'35'"
+			></Loader>
 		</div>
 	</div>
 </template>
@@ -21,7 +57,6 @@ export default {
 	name: "ServerAccountsPage",
 	data() {
 		return {
-			server: {},
 			infos: {},
 			isLoading: true
 		};
@@ -73,7 +108,7 @@ export default {
 		debug("info", "mounted -> this.dataServer", this.dataServer);
 		if (this.dataServer !== undefined) {
 			this.server = this.dataServer;
-            debug("info", "mounted -> this.server", this.server);
+			debug("info", "mounted -> this.server", this.server);
 			this.setSockets();
 		} else {
 			if (
