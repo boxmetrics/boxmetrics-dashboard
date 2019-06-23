@@ -41,13 +41,12 @@ export default {
 		term.on("key", (key, ev) => {
 			const printable =
 				!ev.altKey && !ev.altGraphKey && !ev.ctrlKey && !ev.metaKey;
-			if (ev.keyCode !== 8 && ev.keyCode !== 13) {
+			if ([8, 13, 38, 40, 39, 37].indexOf(ev.keyCode) === -1) {
 				this.currentBuffer.push(key);
 			}
 			if (ev.keyCode === 13) {
 				this.executeCommand();
 			} else if (ev.keyCode === 8) {
-				this.currentBuffer.pop();
 				if (term.buffer._buffer.x > 2) {
 					term.write("\b \b");
 				}
