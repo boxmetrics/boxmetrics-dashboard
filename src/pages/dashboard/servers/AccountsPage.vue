@@ -90,11 +90,11 @@
 						<table class="table table-dashboard">
 							<thead>
 								<tr>
-									<th scope="col">Utilisateur</th>
-									<th scope="col">IP</th>
-									<th scope="col">Terminal</th>
-									<th scope="col">Disponible depuis</th>
-									<th scope="col">Actions</th>
+									<th scope="col">UID</th>
+									<th scope="col">GID</th>
+									<th scope="col">Login</th>
+									<th scope="col">Nom utilisateur</th>
+									<th scope="col">Répertoire</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -102,17 +102,13 @@
 									v-for="(item, index) in this.infos.users"
 									v-bind:key="index"
 								>
-									<td>{{ item.user }}</td>
-									<td>{{ item.host }}</td>
-									<td>{{ item.terminal }}</td>
+									<td>{{ item.Uid }}</td>
+									<td>{{ item.Gid }}</td>
+									<td>{{ item.Username }}</td>
 									<td>
-										{{
-											$moment(
-												new Date(item.started * 1000)
-											).fromNow(true)
-										}}
+										{{ item.Name }}
 									</td>
-									<td>actions</td>
+									<td>{{ item.HomeDir }}</td>
 								</tr>
 							</tbody>
 						</table>
@@ -145,6 +141,7 @@ export default {
 			errors: {},
 			isModalVisible: false,
 			addPending: false,
+			isUserAdded: false,
 			fields: {
 				username: "",
 				password: ""
@@ -189,12 +186,21 @@ export default {
 			}
 			if (Object.keys(parseToObject(this.errors)).length === 0) {
 				this.addPending = true;
-				setTimeout(() => {
-					this.addPending = false;
-					this.closeModal();
-					this.refreshData();
-					this.resetForm();
-				}, 1500);
+				this.$socket.sendObj(
+					server.addUser(this.fields.username, this.fields.password)
+				);
+				const userAdded = setInterval(() => {
+					if (this.isUserAdded === true) {
+						this.isUserAdded = false;
+						this.addPending = false;
+						debug("success", "user added", this.isUserAdded);
+                        this.closeModal();
+                        this.retrieveInfos();
+						this.refreshData(this.$route.params.id);
+						this.resetForm();
+						clearInterval(userAdded);
+					}
+				}, 100);
 			}
 		},
 		resetForm() {
@@ -204,6 +210,7 @@ export default {
 			}
 		},
 		fetchData(serverId) {
+			this.isLoading = true;
 			axios
 				.get(`${apiUrl}servers/${serverId}`, {
 					headers: {
@@ -234,8 +241,8 @@ export default {
 				}
 			}, 100);
 		},
-		refreshData() {
-			this.fetchData(this.$route.params.id);
+		refreshData(serverId) {
+			this.fetchData(serverId);
 		}
 	},
 	created() {
@@ -262,16 +269,25 @@ export default {
 			if (this.$store.getters.isConnected === true) {
 				this.retrieveInfos();
 				this.$socket.onmessage = msg => {
-					Object.assign(this.infos, {
-						[`${JSON.parse(msg.data).event.value}`]: JSON.parse(
-							msg.data
-						).data
-					});
-					debug(
-						"info",
-						"data -> this.infos",
-						parseToObject(this.infos)
-					);
+					const parsedData = JSON.parse(msg.data);
+					if (
+						parsedData.data &&
+						!parsedData.error &&
+						parsedData.event.value === "adduser" &&
+						this.isUserAdded === false
+					) {
+						debug("info", "data -> this.infos", parsedData);
+						this.isUserAdded = true;
+					} else {
+						Object.assign(this.infos, {
+							[`${parsedData.event.value}`]: parsedData.data
+						});
+						debug(
+							"info",
+							"data -> this.infos",
+							parseToObject(this.infos)
+						);
+					}
 				};
 				clearInterval(initConnection);
 			}

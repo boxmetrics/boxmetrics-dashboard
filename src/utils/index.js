@@ -92,6 +92,24 @@ export const server = {
 	getProcess(pid) {
 		return {type: "info", value: {options: {pid}}};
 	},
+	addUser(user, password) {
+		return {
+			type: "script",
+			value: "adduser",
+			options: {
+				args: [`-u ${user}`, `-p ${password}`]
+			}
+		};
+	},
+	killProcess(pid) {
+		return {
+			type: "script",
+			value: "killprocess",
+			options: {
+				pid: Number(pid)
+			}
+		};
+	},
 	runCommand(command, args) {
 		return {type: "command", value: command, options: {args}};
 	}
@@ -106,4 +124,14 @@ export const buildCommand = obj => {
 		command,
 		args
 	};
+};
+
+export const omit = (obj, arr) => {
+	return Object.keys(obj)
+		.filter(k => {
+			return !arr.includes(k);
+		})
+		.reduce((acc, key) => {
+			return (acc[key] = obj[key]), acc;
+		}, {});
 };

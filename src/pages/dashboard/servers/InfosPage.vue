@@ -96,6 +96,7 @@
 											<th scope="col">PID</th>
 											<th scope="col">Lancé il y a</th>
 											<th scope="col">Temps CPU</th>
+											<th scope="col">Terminer</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -121,6 +122,15 @@
 											</td>
 											<td>
 												{{ process.cpu.times.system }}
+											</td>
+											<td>
+												<button
+													@click="
+														killProcess(process.pid)
+													"
+												>
+													Kill
+												</button>
 											</td>
 										</tr>
 									</tbody>
@@ -171,7 +181,13 @@
 
 <script>
 // eslint-disable-next-line no-unused-vars
-import {debug, parseToObject, isArraysEqual, server} from "../../../utils";
+import {
+	debug,
+	parseToObject,
+	isArraysEqual,
+	server,
+	omit
+} from "../../../utils";
 import Loader from "@/components/ui/loader";
 import Chart from "chart.js";
 import axios from "axios";
@@ -186,7 +202,8 @@ export default {
 		return {
 			server: {},
 			infos: {},
-			isLoading: true
+			isLoading: true,
+			isProcessKilled: false
 		};
 	},
 	components: {
@@ -198,7 +215,6 @@ export default {
 			this.$socket.sendObj(server.getCpu());
 			this.$socket.sendObj(server.getMemory());
 			this.$socket.sendObj(server.getDisks());
-			this.$socket.sendObj(server.getUsers());
 			this.$socket.sendObj(server.getHost());
 			this.$socket.sendObj(server.getNetwork());
 			this.$socket.sendObj(server.getProcesses());
@@ -227,7 +243,6 @@ export default {
 					"cpu",
 					"memory",
 					"disks",
-					"users",
 					"host",
 					"network",
 					"processes"
@@ -240,7 +255,7 @@ export default {
 						isArraysEqual(infosKeys, requiredFields)
 					);
 					this.infos.cpu.info.shift();
-					this.infos.processes.length = 50;
+					// this.infos.processes.length = 50;
 					const allowed = [
 						"hostname",
 						"kernelVersion",
@@ -310,6 +325,7 @@ export default {
 			});
 		},
 		fetchData(serverId) {
+			this.isLoading = true;
 			axios
 				.get(`${apiUrl}servers/${serverId}`, {
 					headers: {
@@ -322,8 +338,20 @@ export default {
 					this.setSockets();
 				});
 		},
-		refreshData() {
-			this.fetchData();
+		refreshData(serverId) {
+			this.fetchData(serverId);
+		},
+		killProcess(pid) {
+			this.$socket.sendObj(server.killProcess(pid));
+			const processKilled = setInterval(() => {
+				if (this.isProcessKilled === true) {
+					this.isProcessKilled = false;
+					debug("success", "process killed", this.isProcessKilled);
+					// TODO: Remove hard reload
+					window.location.reload();
+					clearInterval(processKilled);
+				}
+			}, 100);
 		}
 	},
 	created() {
@@ -349,16 +377,25 @@ export default {
 			if (this.$store.getters.isConnected === true) {
 				this.retrieveInfos();
 				this.$socket.onmessage = msg => {
-					Object.assign(this.infos, {
-						[`${JSON.parse(msg.data).event.value}`]: JSON.parse(
-							msg.data
-						).data
-					});
-					debug(
-						"info",
-						"data -> this.infos",
-						parseToObject(this.infos)
-					);
+					const parsedData = JSON.parse(msg.data);
+					if (
+						parsedData.data &&
+						!parsedData.error &&
+						parsedData.event.value === "killprocess" &&
+						this.isProcessKilled === false
+					) {
+						debug("info", "data -> this.infos", parsedData);
+						this.isProcessKilled = true;
+					} else {
+						Object.assign(this.infos, {
+							[`${parsedData.event.value}`]: parsedData.data
+						});
+						debug(
+							"info",
+							"data -> this.infos",
+							parseToObject(this.infos)
+						);
+					}
 				};
 				clearInterval(initConnection);
 			}
