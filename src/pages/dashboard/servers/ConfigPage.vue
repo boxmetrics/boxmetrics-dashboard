@@ -2,7 +2,20 @@
 	<div class="dashboard">
 		<div class="inner-dashboard">
 			<div class="dashboard-content">
-				<h1>Configuration du serveur</h1>
+				<div class="dashboard-header">
+					<h1>Serveurs</h1>
+					<ul class="actions">
+						<li>
+							<a
+								class="btn delete-server"
+								@click.prevent="deleteServer(server._id)"
+							>
+								<i class="icon ion-ios-trash"></i>Supprimer ce
+								serveur
+							</a>
+						</li>
+					</ul>
+				</div>
 				<div class="dashboard-section">
 					<form class="config-form">
 						<div
@@ -69,8 +82,8 @@ export default {
 	data() {
 		return {
 			isLoading: true,
-            server: {},
-            updatePending: false,
+			server: {},
+			updatePending: false,
 			updated: false
 		};
 	},
@@ -119,6 +132,23 @@ export default {
 					this.isLoading = false;
 				});
 		},
+		deleteServer(serverId) {
+			axios
+				.delete(`${apiUrl}servers/${serverId}`, {
+					headers: {
+						"x-access-token": this.token
+					}
+				})
+				.then(function(response) {
+					// eslint-disable-next-line no-console
+					console.log(response.data);
+					window.location.href = "/";
+				})
+				.catch(function(error) {
+					// eslint-disable-next-line no-console
+					console.log(error);
+				});
+		},
 		handleChange(event, value) {
 			if (
 				event.keyCode === 37 ||
@@ -136,11 +166,48 @@ export default {
 
 <style lang="scss" scoped>
 .dashboard-content {
-	.config-form {
-		margin-top: 20px;
-		max-width: 560px;
-		background: #fff;
-		padding: 20px;
+	.dashboard-header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		margin-bottom: 30px;
+
+		h1 {
+			color: #303133;
+			margin-top: 0;
+			margin-bottom: 30px;
+		}
+
+		.actions {
+			padding: 0;
+			margin: 0;
+			list-style: none;
+
+			.delete-server {
+				position: relative;
+				font-size: 14px;
+				padding: 12px;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				background: #f05d78;
+
+				> .icon {
+					font-size: 18px;
+					margin-right: 10px;
+				}
+			}
+		}
+	}
+	.dashboard-section {
+		height: 90vh !important;
+
+		.config-form {
+			margin-top: 20px;
+			max-width: 560px;
+			background: #fff;
+			padding: 20px;
+		}
 	}
 }
 </style>

@@ -125,11 +125,14 @@
 											</td>
 											<td>
 												<button
+													class="btn kill-process"
 													@click="
 														killProcess(process.pid)
 													"
 												>
-													Kill
+													<i
+														class="icon ion-ios-remove-circle"
+													></i>
 												</button>
 											</td>
 										</tr>
@@ -212,6 +215,7 @@ export default {
 	methods: {
 		retrieveInfos() {
 			// TODO: implement async/await functions
+			this.inf;
 			this.$socket.sendObj(server.getCpu());
 			this.$socket.sendObj(server.getMemory());
 			this.$socket.sendObj(server.getDisks());
@@ -479,6 +483,20 @@ export default {
 		h2 {
 			font-size: 18px;
 			color: #303133;
+		}
+	}
+	.kill-process {
+		background: transparent;
+        color: #f05d78;
+		position: relative;
+		font-size: 14px;
+		padding: 12px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+
+		> .icon {
+			font-size: 20px;
 		}
 	}
 }

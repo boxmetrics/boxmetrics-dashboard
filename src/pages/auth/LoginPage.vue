@@ -165,10 +165,10 @@ export default {
 			this.errors = {};
 			const {email, password} = this;
 			if (!this.isEmailValid(email)) {
-				this.errors.email = "Email is required and must be valid";
+				this.errors.email = "Ce champs et requis et doit être valide";
 			}
 			if (!this.isPasswordValid(password)) {
-				this.errors.password = "Password is required";
+				this.errors.password = "Ce champs et requis et doit être valide";
 			}
 
 			if (

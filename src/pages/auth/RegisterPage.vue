@@ -182,13 +182,13 @@ export default {
 			this.errors = {};
 			const {email, password, username} = this;
 			if (!this.isEmailValid(email)) {
-				this.errors.email = "Email is required and must be valid";
+				this.errors.email = "Ce champs et requis et doit être valide";
 			}
 			if (!this.isPasswordValid(password)) {
-				this.errors.password = "Password is required";
+				this.errors.password = "Ce champs et requis et doit être valide";
 			}
 			if (!this.isUsernameValid(username)) {
-				this.errors.username = "Username is required";
+				this.errors.username = "Ce champs et requis et doit être valide";
 			}
 			if (
 				Object.keys(JSON.parse(JSON.stringify(this.errors))).length ===

@@ -228,7 +228,7 @@
 									Status
 								</span>
 								<p>
-									{{ server.status }}
+									actif
 								</p>
 							</div>
 							<div class="server-menu">
@@ -629,6 +629,27 @@ export default {
 									&:hover {
 										opacity: 0.7;
 									}
+								}
+							}
+						}
+
+						.server-status {
+							p {
+								position: relative;
+								padding-left: 10px;
+
+								&::before {
+									display: block;
+									content: "";
+									position: absolute;
+									top: 50%;
+									left: 0;
+									margin-top: -3px;
+									margin-right: -3px;
+									width: 4px;
+									height: 4px;
+									border-radius: 50%;
+									background-color: #2ecc71;
 								}
 							}
 						}

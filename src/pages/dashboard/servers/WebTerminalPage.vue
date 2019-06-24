@@ -129,7 +129,7 @@ export default {
 		list-style: none;
 
 		.clear {
-			background: #eb3b5a;
+			background: #f05d78;
 			position: relative;
 			font-size: 14px;
 			padding: 12px;

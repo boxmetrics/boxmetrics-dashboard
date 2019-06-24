@@ -6,9 +6,7 @@
 				this.currentRoute.startsWith('/dashboard/servers')
 			"
 		></Sidebar>
-		<keep-alive>
-			<router-view />
-		</keep-alive>
+		<router-view :key="$route.fullPath"></router-view>
 	</div>
 </template>
 <script>

@@ -18,7 +18,8 @@ Vue.use(Router);
 const router = new Router({
 	mode: "history",
 	routes: [
-		{path: "/", redirect: "/dashboard"},
+		{path: "/", redirect: "/dashboard/servers"},
+		{path: "/dashboard/", redirect: "/dashboard/servers"},
 		{
 			path: "/auth/login",
 			name: "LoginPage",
