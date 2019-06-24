@@ -271,30 +271,41 @@ export default {
 					datasets: [
 						{
 							data: [
-								parseToObject(this.infos).memory.used.substring(
-									0,
-									parseToObject(this.infos).memory.used
-										.length - 2
-								),
 								parseToObject(
 									this.infos
-								).memory.available.substring(
-									0,
-									parseToObject(this.infos).memory.available
-										.length - 2
+								).memory.usedpercent.replace(/\%$/gm, ""),
+								parseFloat(
+									100 -
+										parseToObject(
+											this.infos
+										).memory.usedpercent.replace(
+											/\%$/gm,
+											""
+										)
 								)
 							],
 
-							borderColor: ["#2196f38c", "#f443368c"],
-							backgroundColor: ["#2196f38c", "#f443368c"],
+							borderColor: ["#f443368c", "#2196f38c"],
+							backgroundColor: ["#f443368c", "#2196f38c"],
 							borderWidth: 1
 						}
 					]
 				},
 				options: {
 					responsive: false,
-                    maintainAspectRatio: true,
-                    aspectRatio: 2
+					maintainAspectRatio: true,
+					aspectRatio: 2,
+					tooltips: {
+						enabled: true,
+						mode: "single",
+						callbacks: {
+							label: (t, d) => {
+								return `${d.labels[t.index]}: ${
+									d.datasets[0].data[t.index]
+								} %`;
+							}
+						}
+					}
 				}
 			});
 		},
