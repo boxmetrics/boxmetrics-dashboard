@@ -176,7 +176,7 @@ export default {
 				0
 			) {
 				this.$store.dispatch("login", {email, password}).then(() => {
-					this.$router.go();
+					window.location.href = "/";
 				});
 			}
 		}

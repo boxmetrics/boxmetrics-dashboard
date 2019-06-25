@@ -197,7 +197,7 @@ export default {
 				this.$store
 					.dispatch("register", {username, email, password})
 					.then(() => {
-						this.$router.push("/dashboard");
+                        window.location.href = "/";
 					});
 			}
 		}
