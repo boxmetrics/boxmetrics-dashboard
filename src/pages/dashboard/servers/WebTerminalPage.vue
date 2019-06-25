@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import {debug, parseToObject, isArraysEqual, server} from "../../../utils";
+import {debug, parseToObject} from "../../../utils";
 import Terminal from "@/components/ui/terminal";
 import Loader from "@/components/ui/loader";
 import axios from "axios";
@@ -47,6 +47,8 @@ export default {
 	name: "ServerWebTerminalPage",
 	data() {
 		return {
+			token: null,
+			currentUserId: null,
 			isLoading: true,
 			server: {}
 		};

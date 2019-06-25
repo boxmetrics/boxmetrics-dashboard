@@ -6,9 +6,7 @@ import moment from "moment";
 
 Vue.config.productionTip = false;
 
-// Local date
 moment.locale("fr");
-// Add moment globally
 Vue.prototype.$moment = moment;
 
 new Vue({

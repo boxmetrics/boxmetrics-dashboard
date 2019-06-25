@@ -120,6 +120,7 @@
 </template>
 
 <script>
+import {debug, isEmailValid, isFieldValid} from "../../utils";
 import Header from "@/components/partials/Header";
 import Footer from "@/components/partials/Footer";
 import Loader from "@/components/ui/loader";
@@ -144,31 +145,25 @@ export default {
 		}
 	},
 	methods: {
-		isEmailValid(email) {
-			if (
-				!email.length ||
-				!email.match(
-					/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/
-				)
-			) {
-				return false;
-			}
-			return true;
-		},
-		isPasswordValid(password) {
-			if (!password.length) {
-				return false;
-			}
-			return true;
-		},
 		login() {
 			this.errors = {};
 			const {email, password} = this;
-			if (!this.isEmailValid(email)) {
+			if (!isEmailValid(email)) {
+				debug(
+					"warning",
+					"login -> isEmailValid - email not valid",
+					!isEmailValid(email)
+				);
 				this.errors.email = "Ce champs et requis et doit être valide";
 			}
-			if (!this.isPasswordValid(password)) {
-				this.errors.password = "Ce champs et requis et doit être valide";
+			if (!isFieldValid(password)) {
+				debug(
+					"warning",
+					"login -> isFieldValid - password not valid",
+					!isFieldValid(password)
+				);
+				this.errors.password =
+					"Ce champs et requis et doit être valide";
 			}
 
 			if (

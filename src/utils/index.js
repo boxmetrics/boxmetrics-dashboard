@@ -1,24 +1,5 @@
 import {env} from "../config";
 
-export const splitCamelCase = value => {
-	return value
-		.replace(/([a-z])([A-Z])/g, "$1 $2")
-		.split(" ")
-		.map(item => {
-			return item.toLowerCase();
-		});
-};
-
-export const parseToObject = obj => {
-	return JSON.parse(JSON.stringify(obj));
-};
-
-export const objectToCssString = obj => {
-	return Object.entries(obj).reduce((styleString, [propName, propValue]) => {
-		return `${styleString}${propName}:${propValue};`;
-	}, "");
-};
-
 export const debug = (type, title, message) => {
 	if (!message || env !== "development") {
 		return;
@@ -47,6 +28,51 @@ export const debug = (type, title, message) => {
 	console.log(`%c${title}`, objectToCssString(styleOptions), message);
 };
 
+export const splitCamelCase = value => {
+	return value
+		.replace(/([a-z])([A-Z])/g, "$1 $2")
+		.split(" ")
+		.map(item => {
+			return item.toLowerCase();
+		});
+};
+
+export const isFieldValid = value => {
+	if (!value.length) {
+		return false;
+	}
+	return true;
+};
+
+export const isPasswordValid = value => {
+	if (!value.length) {
+		return false;
+	}
+	return true;
+};
+
+export const isEmailValid = email => {
+	if (
+		!email.length ||
+		!email.match(
+			/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/
+		)
+	) {
+		return false;
+	}
+	return true;
+};
+
+export const parseToObject = obj => {
+	return JSON.parse(JSON.stringify(obj));
+};
+
+export const objectToCssString = obj => {
+	return Object.entries(obj).reduce((styleString, [propName, propValue]) => {
+		return `${styleString}${propName}:${propValue};`;
+	}, "");
+};
+
 export const isArraysEqual = (obj1, obj2) => {
 	return (
 		obj1.length == obj2.length &&
@@ -58,7 +84,7 @@ export const isArraysEqual = (obj1, obj2) => {
 
 // TODO: implement methods
 // to get infos directly
-export const server = {
+export const serverGetters = {
 	getGeneralInfos() {
 		return {type: "info", value: "general"};
 	},

@@ -299,12 +299,11 @@
 </template>
 
 <script>
-/* eslint-disable no-console */
+import {debug, parseToObject, isFieldValid} from "../../../utils";
 import axios from "axios";
 import Modal from "@/components/partials/Modal";
 import Loader from "@/components/ui/loader";
 import {apiUrl} from "../../../config";
-import {debug, parseToObject, server} from "../../../utils";
 
 export default {
 	name: "ServersIndexPage",
@@ -341,7 +340,6 @@ export default {
 	},
 	created() {
 		window.addEventListener("keyup", this.closeOnEscape);
-		this.$store.commit("SET_SOCKET_URL", "ws://154.49.211.237:4455/ws/v1");
 	},
 	components: {
 		Modal,
@@ -355,12 +353,6 @@ export default {
 			this.resetForm();
 			this.isModalVisible = false;
 		},
-		isFieldValid(value) {
-			if (!value.length) {
-				return false;
-			}
-			return true;
-		},
 		closeOnEscape(e) {
 			const key = e.which || e.keyCode || e.detail;
 			if (key === 27 && this.isModalVisible === true) {
@@ -370,9 +362,8 @@ export default {
 		addServer() {
 			this.errors = {};
 			for (const field in this.fields) {
-				// TODO: remove tmp fix
 				if (
-					!this.isFieldValid(this.fields[field]) &&
+					!isFieldValid(this.fields[field]) &&
 					field !== "privateKey"
 				) {
 					this.errors[field] =

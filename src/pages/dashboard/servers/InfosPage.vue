@@ -183,14 +183,7 @@
 </template>
 
 <script>
-// eslint-disable-next-line no-unused-vars
-import {
-	debug,
-	parseToObject,
-	isArraysEqual,
-	server,
-	omit
-} from "../../../utils";
+import {debug, parseToObject, isArraysEqual, serverGetters} from "../../../utils";
 import Loader from "@/components/ui/loader";
 import Chart from "chart.js";
 import axios from "axios";
@@ -203,6 +196,8 @@ export default {
 	},
 	data() {
 		return {
+			token: null,
+			currentUserId: null,
 			server: {},
 			infos: {},
 			isLoading: true,
@@ -214,14 +209,12 @@ export default {
 	},
 	methods: {
 		retrieveInfos() {
-			// TODO: implement async/await functions
-			this.inf;
-			this.$socket.sendObj(server.getCpu());
-			this.$socket.sendObj(server.getMemory());
-			this.$socket.sendObj(server.getDisks());
-			this.$socket.sendObj(server.getHost());
-			this.$socket.sendObj(server.getNetwork());
-			this.$socket.sendObj(server.getProcesses());
+			this.$socket.sendObj(serverGetters.getCpu());
+			this.$socket.sendObj(serverGetters.getMemory());
+			this.$socket.sendObj(serverGetters.getDisks());
+			this.$socket.sendObj(serverGetters.getHost());
+			this.$socket.sendObj(serverGetters.getNetwork());
+			this.$socket.sendObj(serverGetters.getProcesses());
 		},
 		createChart(chartId, chartData) {
 			const checkCtx = setInterval(() => {
@@ -259,7 +252,6 @@ export default {
 						isArraysEqual(infosKeys, requiredFields)
 					);
 					this.infos.cpu.info.shift();
-					// this.infos.processes.length = 50;
 					const allowed = [
 						"hostname",
 						"kernelVersion",
@@ -292,15 +284,12 @@ export default {
 							data: [
 								parseToObject(
 									this.infos
-								).memory.usedpercent.replace(/\%$/gm, ""),
+								).memory.usedpercent.replace(/%$/gm, ""),
 								parseFloat(
 									100 -
 										parseToObject(
 											this.infos
-										).memory.usedpercent.replace(
-											/\%$/gm,
-											""
-										)
+										).memory.usedpercent.replace(/%$/gm, "")
 								)
 							],
 
@@ -342,11 +331,11 @@ export default {
 					this.setSockets();
 				});
 		},
-		refreshData(serverId) {
-			this.fetchData(serverId);
+		refreshData() {
+			this.fetchData(this.$route.params.id);
 		},
 		killProcess(pid) {
-			this.$socket.sendObj(server.killProcess(pid));
+			this.$socket.sendObj(serverGetters.killProcess(pid));
 			const processKilled = setInterval(() => {
 				if (this.isProcessKilled === true) {
 					this.isProcessKilled = false;
@@ -487,7 +476,7 @@ export default {
 	}
 	.kill-process {
 		background: transparent;
-        color: #f05d78;
+		color: #f05d78;
 		position: relative;
 		font-size: 14px;
 		padding: 12px;
