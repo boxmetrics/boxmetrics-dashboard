@@ -9,6 +9,7 @@
 		<router-view :key="$route.fullPath"></router-view>
 	</div>
 </template>
+
 <script>
 import Sidebar from "@/components/partials/Sidebar";
 export default {

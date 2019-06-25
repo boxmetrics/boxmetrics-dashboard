@@ -126,7 +126,13 @@
 </template>
 
 <script>
-import {debug, parseToObject, isArraysEqual, server} from "../../../utils";
+import {
+	debug,
+	parseToObject,
+	isArraysEqual,
+	serverGetters,
+	isFieldValid
+} from "../../../utils";
 import Loader from "@/components/ui/loader";
 import Modal from "@/components/partials/Modal";
 import axios from "axios";
@@ -154,8 +160,7 @@ export default {
 	},
 	methods: {
 		retrieveInfos() {
-			// TODO: implement async/await functions
-			this.$socket.sendObj(server.getUsers());
+			this.$socket.sendObj(serverGetters.getUsers());
 		},
 		showModal() {
 			this.isModalVisible = true;
@@ -163,12 +168,6 @@ export default {
 		closeModal() {
 			this.resetForm();
 			this.isModalVisible = false;
-		},
-		isFieldValid(value) {
-			if (!value.length) {
-				return false;
-			}
-			return true;
 		},
 		closeOnEscape(e) {
 			const key = e.which || e.keyCode || e.detail;
@@ -179,7 +178,7 @@ export default {
 		addUser() {
 			this.errors = {};
 			for (const field in this.fields) {
-				if (!this.isFieldValid(this.fields[field])) {
+				if (isFieldValid(this.fields[field])) {
 					this.errors[field] =
 						"Ce champs et requis et doit être valide";
 				}
@@ -187,16 +186,19 @@ export default {
 			if (Object.keys(parseToObject(this.errors)).length === 0) {
 				this.addPending = true;
 				this.$socket.sendObj(
-					server.addUser(this.fields.username, this.fields.password)
+					serverGetters.addUser(
+						this.fields.username,
+						this.fields.password
+					)
 				);
 				const userAdded = setInterval(() => {
 					if (this.isUserAdded === true) {
 						this.isUserAdded = false;
 						this.addPending = false;
 						debug("success", "user added", this.isUserAdded);
-                        this.closeModal();
-                        this.retrieveInfos();
-						this.refreshData(this.$route.params.id);
+						this.closeModal();
+						this.retrieveInfos();
+						this.refreshData();
 						this.resetForm();
 						clearInterval(userAdded);
 					}
@@ -241,8 +243,8 @@ export default {
 				}
 			}, 100);
 		},
-		refreshData(serverId) {
-			this.fetchData(serverId);
+		refreshData() {
+			this.fetchData(this.$route.params.id);
 		}
 	},
 	created() {

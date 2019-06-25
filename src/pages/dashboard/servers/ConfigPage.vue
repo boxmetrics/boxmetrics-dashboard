@@ -65,14 +65,7 @@
 </template>
 
 <script>
-// eslint-disable-next-line no-unused-vars
-import {
-	debug,
-	parseToObject,
-	isArraysEqual,
-	server,
-	omit
-} from "../../../utils";
+import {debug, omit} from "../../../utils";
 import Loader from "@/components/ui/loader";
 import axios from "axios";
 import {apiUrl} from "../../../config";
@@ -128,7 +121,6 @@ export default {
 					]);
 					tmpObj.password = "";
 					this.server = tmpObj;
-					// this.server.status  =false;
 					this.isLoading = false;
 				});
 		},
@@ -139,17 +131,15 @@ export default {
 						"x-access-token": this.token
 					}
 				})
-				.then(function(response) {
-					// eslint-disable-next-line no-console
-					console.log(response.data);
+				.then(response => {
+					debug("info", "deleteServer -> response", response);
 					window.location.href = "/";
 				})
-				.catch(function(error) {
-					// eslint-disable-next-line no-console
-					console.log(error);
+				.catch(error => {
+					debug("error", "deleteServer -> error", error);
 				});
 		},
-		handleChange(event, value) {
+		handleChange(event) {
 			if (
 				event.keyCode === 37 ||
 				event.keyCode === 38 ||

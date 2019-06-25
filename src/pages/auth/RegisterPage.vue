@@ -130,6 +130,7 @@
 </template>
 
 <script>
+import {debug, isEmailValid, isFieldValid} from "../../utils";
 import Header from "@/components/partials/Header";
 import Footer from "@/components/partials/Footer";
 import Loader from "@/components/ui/loader";
@@ -155,40 +156,34 @@ export default {
 		}
 	},
 	methods: {
-		isEmailValid(email) {
-			if (
-				!email.length ||
-				!email.match(
-					/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/
-				)
-			) {
-				return false;
-			}
-			return true;
-		},
-		isPasswordValid(password) {
-			if (!password.length) {
-				return false;
-			}
-			return true;
-		},
-		isUsernameValid(username) {
-			if (!username.length) {
-				return false;
-			}
-			return true;
-		},
 		register() {
 			this.errors = {};
 			const {email, password, username} = this;
-			if (!this.isEmailValid(email)) {
+			if (!isEmailValid(email)) {
+				debug(
+					"warning",
+					"register -> isEmailValid - email not valid",
+					!isEmailValid(email)
+				);
 				this.errors.email = "Ce champs et requis et doit être valide";
 			}
-			if (!this.isPasswordValid(password)) {
-				this.errors.password = "Ce champs et requis et doit être valide";
+			if (!isFieldValid(password)) {
+				debug(
+					"warning",
+					"register -> isFieldValid - password not valid",
+					!isFieldValid(password)
+				);
+				this.errors.password =
+					"Ce champs et requis et doit être valide";
 			}
-			if (!this.isUsernameValid(username)) {
-				this.errors.username = "Ce champs et requis et doit être valide";
+			if (!isFieldValid(username)) {
+				debug(
+					"warning",
+					"register -> isFieldValid - username not valid",
+					!isFieldValid(username)
+				);
+				this.errors.username =
+					"Ce champs et requis et doit être valide";
 			}
 			if (
 				Object.keys(JSON.parse(JSON.stringify(this.errors))).length ===
@@ -197,7 +192,7 @@ export default {
 				this.$store
 					.dispatch("register", {username, email, password})
 					.then(() => {
-                        window.location.href = "/";
+						window.location.href = "/";
 					});
 			}
 		}
