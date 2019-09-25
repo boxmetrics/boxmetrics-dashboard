@@ -95,9 +95,9 @@ npm run build
         <p>DevOps System Integrator</p>
     </td>
           <td align="center" width="33.3333%" valign="top">
-        <img style="border-radius: 50%;"  width="100" height="100" src="https://github.com/Abdessalam98.png?s=100">
+        <img style="border-radius: 50%;"  width="100" height="100" src="https://github.com/abdessalamb98.png?s=100">
         <br>
-        <a href="https://github.com/Abdessalam98">Abdessalam Benharira</a>
+        <a href="https://github.com/abdessalamb98">Abdessalam Benharira</a>
         <p>JavaScript Developer</p>
       </td>
      </tr>
