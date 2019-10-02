@@ -1,4 +1,4 @@
-<a href="https://boxmetrics.github.io/"><img src="https://raw.githubusercontent.com/boxmetrics/boxmetrics-front-tool/master/.github/boxmetrics-logo.png" width="250" alt="boxmetrics"></a>
+<a href="https://boxmetrics.github.io/"><img src="https://raw.githubusercontent.com/boxmetrics/boxmetrics-front-app/master/.github/boxmetrics-logo.png" width="250" alt="boxmetrics"></a>
 
 > This repo contains the boxmetrcis front app built with Vue.js
 
