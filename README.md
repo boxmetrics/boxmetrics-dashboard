@@ -77,29 +77,25 @@ npm run build
 └── LICENSE
 ```
 
-## 👥 Contributors
+## 👷 Maintained by
+
+> Project initially launched by Laurent Panek, Maxence Colmant and Abdessalam Benharira
 
 <table width="100%">
   <tbody width="100%">
     <tr width="100%">
-      <td align="center" width="33.3333%" valign="top">
-        <img style="border-radius: 50%;" width="100" height="100" src="https://github.com/Laurent-PANEK.png?s=100">
-        <br>
-        <a href="https://github.com/Laurent-PANEK">Laurent Panek</a>
-        <p>Security System Integrator</p>
-      </td>
-     <td align="center" width="33.3333%" valign="top">
-        <img style="border-radius: 50%;"  width="100" height="100" src="https://github.com/maxencecolmant.png?s=100">
-        <br>
-        <a href="https://github.com/maxencecolmant">Maxence Colmant</a>
-        <p>DevOps System Integrator</p>
-    </td>
-          <td align="center" width="33.3333%" valign="top">
-        <img style="border-radius: 50%;"  width="100" height="100" src="https://github.com/abdessalamb98.png?s=100">
-        <br>
-        <a href="https://github.com/abdessalamb98">Abdessalam Benharira</a>
-        <p>JavaScript Developer</p>
-      </td>
+        <td align="center" width="33.3333%" valign="top">
+            <img style="border-radius: 50%;" width="100" height="100" src="https://github.com/Laurent-PANEK.png?s=100">
+            <br>
+            <a href="https://github.com/Laurent-PANEK">Laurent Panek</a>
+            <p>Security System Integrator</p>
+        </td>
+        <td align="center" width="33.3333%" valign="top">
+            <img style="border-radius: 50%;"  width="100" height="100" src="https://github.com/abdessalamb98.png?s=100">
+            <br>
+            <a href="https://github.com/abdessalamb98">Abdessalam Benharira</a>
+            <p>JavaScript Developer</p>
+        </td>
      </tr>
   </tbody>
 </table>
