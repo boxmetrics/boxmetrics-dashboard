@@ -1,21 +1,69 @@
-  node {
-    stage('Checkout') {
-       checkout scm
+pipeline {
+ agent any
+
+ stages {
+  stage('Checkout') {
+   steps {
+    echo 'Checkout..'
+    checkout scm
+   }
+  }
+  stage('Environement') {
+   steps {
+    echo 'Env..'
+    sh 'git --version'
+    echo "Build number : env.BUILD_NUMBER"
+    sh 'docker -v'
+    sh 'docker ps'
+   }
+  }
+  stage('Build') {
+   steps {
+    withCredentials([string(credentialsId: 'API_DEV_URL', variable: 'API_DEV_URL')]) {
+     sh "docker build --build-arg API_URL=${API_DEV_URL} -t boxmetrics-front ."
     }
-    stage('Environment') {
-      sh 'git --version'
-      echo "Branch: ${env.BRANCH_NAME}"
-      sh 'docker -v'
-      sh 'printenv'
+   }
+  }
+  stage('Deploy to Dev') {
+   when {
+    anyOf {
+     branch 'develop';
+     branch 'ci-cd'
     }
-    stage('Build Docker test'){
-     sh 'docker build -t boxmetrics-front --no-cache .'
+   }
+   steps {
+    echo 'Build and push'
+    withCredentials([string(credentialsId: 'SERVER', variable: 'SERVER')]) {
+     withDockerRegistry(credentialsId: 'ecr:us-west-2:aws-cred', url: 'https://${SERVER}') {
+      sh "docker tag boxmetrics-front ${SERVER}/boxmetrics-front:${env.BRANCH_NAME}-build-${env.BUILD_NUMBER}"
+      sh "docker push ${SERVER}/boxmetrics-front:${env.BRANCH_NAME}-build-${env.BUILD_NUMBER}"
+      sh 'docker ps'
+      sh 'docker stop boxmetrics-front-dev || true'
+      sh 'docker rm boxmetrics-front-dev || true'
+      sh "docker run -d -p 8082:80 --name boxmetrics-front-dev ${SERVER}/boxmetrics-front:${env.BRANCH_NAME}-build-${env.BUILD_NUMBER}"
+     }
     }
-    stage('Deploy'){
-      
-        sh 'docker tag boxmetrics-front 149.91.90.168:5000/boxmetrics-front'
-        sh 'docker push 149.91.90.168:5000/boxmetrics-front'
+   }
+  }
+  stage('Deploy to Prod') {
+   when {
+    anyOf {
+     branch 'master'
+    }
+   }
+    steps {
+     echo 'Build and push to prod '
+     withCredentials([string(credentialsId: 'SERVER', variable: 'SERVER')]) {
+      withDockerRegistry(credentialsId: 'ecr:us-west-2:aws-cred', url: 'https://${SERVER}') {
+       sh "docker tag boxmetrics-front ${SERVER}:${env.BRANCH_NAME}-build-${env.BUILD_NUMBER}"
+       sh "docker push ${SERVER}:${env.BRANCH_NAME}-build-${env.BUILD_NUMBER}"
+       sh 'ssh prod-boxmetrics docker ps'
+       sh 'ssh prod-boxmetrics docker stop boxmetrics-front-prod || true'
+       sh 'ssh prod-boxmetrics docker rm boxmetrics-front-prod || true'
+       sh "ssh prod-boxmetrics docker run -d -p 8082:80 --env-file /srv/boxmetrics/front/.env --name boxmetrics-front-prod ${SERVER}/boxmetrics-front:${env.BRANCH_NAME}-build-${env.BUILD_NUMBER}"
       }
+     }
     }
-  
-  
+   }
+  }
+ }

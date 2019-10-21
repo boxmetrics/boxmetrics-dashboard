@@ -2,7 +2,7 @@
 	<div class="dashboard">
 		<div class="inner-dashboard">
 			<div class="content-container">
-				<h1>Dashboard</h1>
+				<h1>Profile page</h1>
 				<div class="dashboard-section"></div>
 			</div>
 		</div>
@@ -11,7 +11,7 @@
 
 <script>
 export default {
-	name: "DashIndexPage"
+	name: "ProfilePage"
 };
 </script>
 

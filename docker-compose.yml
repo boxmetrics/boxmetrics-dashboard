@@ -1,0 +1,10 @@
+version: '2'
+services:
+   boxmetrics-front-app:
+      build: .
+      ports:
+        - "8080:8080"
+      env_file:
+        - .env
+      container_name: boxmetrics-front
+   

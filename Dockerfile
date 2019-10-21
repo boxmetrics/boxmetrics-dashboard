@@ -1,22 +1,13 @@
-FROM node:lts-alpine
-
-# installe un simple serveur http pour servir un contenu statique
-RUN npm install -g http-server
-
-# définit le dossier 'app' comme dossier de travail
+FROM node:10
+COPY ./ /app
 WORKDIR /app
+ARG API_URL
+ENV VUE_APP_API_URL=${API_URL}
+RUN npm install && npm run build
 
-# copie 'package.json' et 'package-lock.json' (si disponible)
-COPY package*.json ./
-
-# installe les dépendances du projet
-RUN npm install
-
-# copie les fichiers et dossiers du projet dans le dossier de travail (par exemple : le dossier 'app')
-COPY . .
-
-# construit l'app pour la production en la minifiant
-RUN npm run build
-
-EXPOSE 8080
-CMD [ "http-server", "dist" ]
+FROM nginx
+RUN mkdir /app
+ARG API_URL
+ENV VUE_APP_API_URL=${API_URL}
+COPY --from=0 /app/dist /app
+COPY nginx.conf /etc/nginx/nginx.conf
