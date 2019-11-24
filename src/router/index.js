@@ -25,7 +25,7 @@ const router = new Router({
 			name: "LoginPage",
 			component: LoginPage,
 			meta: {
-				title: "boxmetrics - Connexion"
+				title: "boxmetrics - Login"
 			}
 		},
 		{
@@ -33,7 +33,7 @@ const router = new Router({
 			name: "RegisterPage",
 			component: RegisterPage,
 			meta: {
-				title: "boxmetrics - Inscription"
+				title: "boxmetrics - Register"
 			},
 			redirect: env !== "development" && "/auth/login"
 		},
@@ -42,7 +42,7 @@ const router = new Router({
 			name: "ForgotPassPage",
 			component: ForgotPassPage,
 			meta: {
-				title: "boxmetrics - Mot de passe oublié"
+				title: "boxmetrics - Forgot password"
 			}
 		},
 		{
@@ -50,7 +50,7 @@ const router = new Router({
 			name: "Dashboard",
 			component: DashIndexPage,
 			meta: {
-				title: "boxmetrics - Tableau de bord"
+				title: "boxmetrics - Dashboard"
 			}
 		},
 		{
@@ -58,7 +58,7 @@ const router = new Router({
 			name: "ProfilePage",
 			component: ProfilePage,
 			meta: {
-				title: "boxmetrics - Mon profil"
+				title: "boxmetrics - My profile"
 			}
 		},
 		{
@@ -66,7 +66,7 @@ const router = new Router({
 			name: "Servers",
 			component: ServersIndexPage,
 			meta: {
-				title: "boxmetrics - Serveurs"
+				title: "boxmetrics - Servers"
 			}
 		},
 		{
@@ -75,7 +75,7 @@ const router = new Router({
 			component: ServerInfosPage,
 			props: true,
 			meta: {
-				title: "boxmetrics - Serveurs"
+				title: "boxmetrics - Server infos"
 			}
 		},
 		{
@@ -83,7 +83,7 @@ const router = new Router({
 			name: "ServerConfig",
 			component: ServerConfigPage,
 			meta: {
-				title: "boxmetrics - Serveurs"
+				title: "boxmetrics - Server configuration"
 			}
 		},
 		{
@@ -91,7 +91,7 @@ const router = new Router({
 			name: "ServerAccounts",
 			component: ServerAccountsPage,
 			meta: {
-				title: "boxmetrics - Serveurs"
+				title: "boxmetrics - Server accounts"
 			}
 		},
 		{
@@ -99,7 +99,7 @@ const router = new Router({
 			name: "ServerWebTerminal",
 			component: ServerWebTerminalPage,
 			meta: {
-				title: "boxmetrics - Serveurs"
+				title: "boxmetrics - Server webterminal"
 			}
 		}
 	]

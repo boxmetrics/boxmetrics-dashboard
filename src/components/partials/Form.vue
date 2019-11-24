@@ -46,6 +46,7 @@ export default {
 		align-items: center;
 		justify-content: space-between;
 		margin-top: 20px;
+		font-size: 14px;
 	}
 	.inner-form {
 		background: #ffffff;
@@ -147,6 +148,10 @@ export default {
 			padding: 16px 24px;
 			border-radius: 3px;
 			margin-top: 5px;
+			transition: all 0.2s ease-in-out;
+			&:hover {
+				background-color: #0d62e8;
+			}
 		}
 	}
 }
