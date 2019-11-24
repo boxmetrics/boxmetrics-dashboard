@@ -12,6 +12,7 @@ import ServerConfigPage from "@/pages/dashboard/servers/ConfigPage";
 import ServerInfosPage from "@/pages/dashboard/servers/InfosPage";
 import ServerWebTerminalPage from "@/pages/dashboard/servers/WebTerminalPage";
 import store from "../store";
+import {env} from "../config";
 
 Vue.use(Router);
 
@@ -34,7 +35,7 @@ const router = new Router({
 			meta: {
 				title: "boxmetrics - Inscription"
 			},
-			redirect: "/auth/login"
+			redirect: env !== "development" && "/auth/login"
 		},
 		{
 			path: "/auth/forgot_password",

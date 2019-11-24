@@ -180,7 +180,7 @@ export default {
 			for (const field in this.fields) {
 				if (isFieldValid(this.fields[field])) {
 					this.errors[field] =
-						"Ce champs et requis et doit être valide";
+						"This field is required and must be valid";
 				}
 			}
 			if (Object.keys(parseToObject(this.errors)).length === 0) {

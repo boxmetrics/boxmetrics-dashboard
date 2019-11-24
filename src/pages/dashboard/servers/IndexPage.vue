@@ -367,7 +367,7 @@ export default {
 					field !== "privateKey"
 				) {
 					this.errors[field] =
-						"Ce champs et requis et doit être valide";
+						"This field is required and must be valid";
 				}
 			}
 

@@ -16,6 +16,7 @@ html {
 		}
 
 		a {
+			color: #2874ed;
 			text-decoration: none;
 		}
 
@@ -103,6 +104,19 @@ html {
 
 		// Base forms
 
+		::placeholder {
+			color: #556282;
+			opacity: 1;
+		}
+
+		::-ms-input-placeholder {
+			color: #556282;
+		}
+
+		:-ms-input-placeholder {
+			color: #556282;
+		}
+
 		form {
 			.grouped {
 				@media (min-width: $phone) {
@@ -176,13 +190,6 @@ html {
 			}
 		}
 
-		.table thead th {
-			border-bottom-width: 0;
-			border-top-width: 0;
-			color: #858585;
-			vertical-align: bottom;
-		}
-
 		.table th,
 		.table td {
 			padding: 0.75rem;
@@ -191,6 +198,13 @@ html {
 			border-top-width: 1px;
 			border-top-style: solid;
 			border-top-color: rgba(72, 94, 144, 0.16);
+		}
+
+		.table thead th {
+			border-bottom-width: 0;
+			border-top-width: 0;
+			color: #858585;
+			vertical-align: bottom;
 		}
 
 		.table-dashboard {
@@ -203,8 +217,8 @@ html {
 			width: 100%;
 		}
 
-		.table-dashboard thead th,
-		.table-dashboard tbody td {
+		.table-dashboard tbody td,
+		.table-dashboard thead th {
 			text-align: initial;
 
 			&:not(:first-child),

@@ -37,9 +37,6 @@
 									handleChange($event, $event.target.value)
 								"
 							/>
-							<!-- <p class="help error">
-								{{ errors.name }}
-							</p> -->
 						</div>
 						<button
 							@click.prevent="updateConfig"
