@@ -82,7 +82,7 @@ export default {
 		0px 9px 46px 8px rgba(0, 0, 0, 0.12);
 	overflow: hidden;
 	display: flex;
-	border-radius: 3px;
+	border-radius: 4px;
 	flex-direction: column;
 }
 

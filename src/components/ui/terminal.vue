@@ -125,7 +125,7 @@ export default {
 	height: 100%;
 	padding: 10px;
 	background: #000000;
-	border-radius: 3px;
+	border-radius: 4px;
 	.xterm {
 		font-family: "Source Code Pro", "Courier New", "Courier", monospace !important;
 		position: relative;

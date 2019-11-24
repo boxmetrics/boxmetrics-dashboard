@@ -489,7 +489,7 @@ export default {
 							justify-content: space-between;
 							min-height: 70px;
 							background-color: #ffffff;
-							border-radius: 3px;
+							border-radius: 4px;
 							box-shadow: 0 2px 4px rgba(3, 27, 78, 0.06);
 							&:not(:last-child) {
 								margin-bottom: 20px;
@@ -540,7 +540,7 @@ export default {
 								z-index: 20;
 								background-color: #ffffff;
 								box-shadow: 0 0 4px rgba(3, 27, 78, 0.1);
-								border-radius: 3px;
+								border-radius: 4px;
 								transition: visibility 0.2s ease,
 									opacity 0.3s ease-out;
 
@@ -679,7 +679,7 @@ export default {
 									padding: 10px 15px;
 									width: 100%;
 									display: block;
-									border-radius: 3px;
+									border-radius: 4px;
 									font-size: 16px;
 									transition: border-color ease-in-out 0.15s,
 										box-shadow ease-in-out 0.15s;

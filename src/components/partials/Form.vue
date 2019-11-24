@@ -51,7 +51,7 @@ export default {
 	.inner-form {
 		background: #ffffff;
 		margin: 0 auto;
-		border-radius: 3px;
+		border-radius: 4px;
 
 		@media (min-width: 480px) {
 			width: 396px;
@@ -101,7 +101,7 @@ export default {
 				padding: 16px 24px;
 				width: 100%;
 				display: block;
-				border-radius: 3px;
+				border-radius: 4px;
 				font-size: 16px;
 				transition: border-color ease-in-out 0.15s,
 					box-shadow ease-in-out 0.15s;
@@ -146,7 +146,7 @@ export default {
 			-webkit-appearance: none;
 			width: 100%;
 			padding: 16px 24px;
-			border-radius: 3px;
+			border-radius: 4px;
 			margin-top: 5px;
 			transition: all 0.2s ease-in-out;
 			&:hover {

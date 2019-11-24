@@ -366,7 +366,7 @@ export default {
 								padding: 10px 15px;
 								width: 100%;
 								display: block;
-								border-radius: 3px;
+								border-radius: 4px;
 								font-size: 16px;
 								transition: border-color ease-in-out 0.15s,
 									box-shadow ease-in-out 0.15s;

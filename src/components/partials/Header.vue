@@ -48,7 +48,7 @@ export default {
 			border: 2px solid #e7e7e7;
 			color: #858585;
 			padding: 10px 20px;
-			border-radius: 3px;
+			border-radius: 4px;
 
 			a {
 				color: #858585;
