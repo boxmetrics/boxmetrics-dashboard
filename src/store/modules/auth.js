@@ -10,16 +10,16 @@ const state = {
 };
 
 const getters = {
-	isAuthenticated: status => {
-		return !!status.token;
+	isAuthenticated: state => {
+		return !!state.token;
 	},
-	authStatus: status => {
-		return status.status;
+	authStatus: state => {
+		return state.status;
 	},
-	getToken: status => {
-		return status.token;
+	token: state => {
+		return state.token;
 	},
-	getUserId: status => {
+	userId: status => {
 		return status.userId;
 	}
 };
@@ -27,7 +27,7 @@ const getters = {
 const actions = {
 	login: ({commit, dispatch}, user) => {
 		return new Promise((resolve, reject) => {
-			commit("authLoading");
+			commit("AUTH_LOADING");
 			axios({url: apiUrl + "auth/login", data: user, method: "POST"})
 				.then(res => {
 					const token = res.data.token,
@@ -35,11 +35,11 @@ const actions = {
 					localStorage.setItem("user-token", token);
 					localStorage.setItem("user-id", userId);
 					axios.defaults.headers.common["x-access-token"] = token;
-					commit("authSuccess", res);
+					commit("AUTH_SUCCESS", res);
 					resolve(res);
 				})
 				.catch(err => {
-					commit("authError", err);
+					commit("AUTH_ERROR", err);
 					localStorage.removeItem("user-token");
 					reject(err);
 				});
@@ -47,7 +47,7 @@ const actions = {
 	},
 	register: ({commit, dispatch}, user) => {
 		return new Promise((resolve, reject) => {
-			commit("authLoading");
+			commit("AUTH_LOADING");
 			axios({url: apiUrl + "auth/register", data: user, method: "POST"})
 				.then(res => {
 					const token = res.data.token,
@@ -55,11 +55,11 @@ const actions = {
 					localStorage.setItem("user-token", token);
 					localStorage.setItem("user-id", userId);
 					axios.defaults.headers.common["x-access-token"] = token;
-					commit("authSuccess", res);
+					commit("AUTH_SUCCESS", res);
 					resolve(res);
 				})
 				.catch(err => {
-					commit("authError", err);
+					commit("AUTH_ERROR", err);
 					localStorage.removeItem("user-token");
 					reject(err);
 				});
@@ -67,7 +67,7 @@ const actions = {
 	},
 	logout: ({commit, dispatch}) => {
 		return new Promise((resolve, reject) => {
-			commit("authLogout");
+			commit("AUTH_LOGOUT");
 			localStorage.removeItem("user-token");
 			localStorage.removeItem("user-id");
 			delete axios.defaults.headers.common["x-access-token"];
@@ -77,20 +77,20 @@ const actions = {
 };
 
 const mutations = {
-	authLoading: status => {
-		status.status = "loading";
+	AUTH_LOADING: state => {
+		state.status = "loading";
 	},
-	authSuccess: (status, resp) => {
-		status.status = "success";
-		status.token = resp.token;
-		status.hasLoadedOnce = true;
+	AUTH_SUCCESS: (state, resp) => {
+		state.status = "success";
+		state.token = resp.token;
+		state.hasLoadedOnce = true;
 	},
-	authError: status => {
-		status.status = "error";
-		status.hasLoadedOnce = true;
+	AUTH_ERROR: state => {
+		state.status = "error";
+		state.hasLoadedOnce = true;
 	},
-	authLogout: status => {
-		status.token = "";
+	AUTH_LOGOUT: state => {
+		state.token = "";
 	}
 };
 

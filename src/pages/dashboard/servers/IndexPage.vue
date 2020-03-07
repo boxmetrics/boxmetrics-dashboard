@@ -329,13 +329,13 @@ export default {
 	},
 	mounted() {
 		if (
-			this.$store.getters.getToken === undefined ||
-			this.$store.getters.getToken === ""
+			this.$store.getters.token === undefined ||
+			this.$store.getters.token === ""
 		) {
 			return;
 		}
-		this.token = this.$store.getters.getToken;
-		this.currentUserId = this.$store.getters.getUserId;
+		this.token = this.$store.getters.token;
+		this.currentUserId = this.$store.getters.userId;
 		this.fetchData();
 	},
 	created() {
